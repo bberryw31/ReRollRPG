@@ -50,7 +50,7 @@ def game_intro():
         user_input = input("\n> ").strip().lower()
         if user_input == "start" or user_input == "s":
             start_counter = 1
-            while start_counter < 6:
+            while start_counter < 3:
                 clear_screen(0)
                 print("\n\033[0mLoading game" + ("." * start_counter))
                 start_counter += 1
@@ -77,21 +77,25 @@ def game_intro():
 def random_character():
     classes = {
         "Bodybuilder": {
+            "class_name": "Bodybuilder",
             "description": "There is nothing that cannot be lifted.",
             "main_stats": ["STR"],
             "icon": "🦾 "
         },
         "Hunter": {
+            "class_name": "Hunter",
             "description": "Hunts rabbits for a living.",
             "main_stats": ["DEX"],
             "icon": "🏹 "
         },
         "Fortuneteller": {
+            "class_name": "Fortuneteller",
             "description": "Sees the future, then makes it worse.",
             "main_stats": ["INT"],
             "icon": "🔮 "
         },
         "Gambler": {
+            "class_name": "Gambler",
             "description": "Lives by the dice, fights by the odds.",
             "main_stats": ["LUC"],
             "icon": "🎰 "
@@ -109,15 +113,54 @@ def random_character():
         random_stats[random.choice(stats_list)] += 1
         total_stats -= 1
     random_class = random.choice(list(classes.keys()))
-    character = {"stats": random_stats, "class": classes[random_class]}
+    random_hp = random.randint(10, 20)
+    character = {
+        "stats": random_stats,
+        "class": classes[random_class],
+        "HP": random_hp,
+        "roll": 10
+    }
     return character
+
+
+def select_character():
+    clear_screen(1)
+    print("Select a character!")
+    while True:
+        new_character = random_character()
+        clear_screen(1)
+        print(f"""
+            \033[96mNew Character\033[0m
+
+        \033[1m\033[33mSTR\033[0m : {new_character["stats"]["str"]}
+        \033[1m\033[33mDEX\033[0m : {new_character["stats"]["dex"]}
+        \033[1m\033[33mINT\033[0m : {new_character["stats"]["int"]}
+        \033[1m\033[33mLUC\033[0m : {new_character["stats"]["luc"]}
+    
+    HP : {new_character["HP"]}
+    Class : \033[91m{new_character["class"]["class_name"]}\033[0m {new_character["class"]["icon"]}
+        {new_character["class"]["description"]}       
+    Main Stats: \033[92m\033[1m{" + ".join(new_character["class"]["main_stats"])}\033[0m
+
+        1. Confirm
+        2. Re-roll
+        """)
+        while True:
+            user_input = input("Enter 1 to Confirm, 2 to Re-roll.\n> ").strip()
+            if user_input == "2":
+                break
+            elif user_input == "1":
+                return new_character
+            else:
+                print("Invalid input.")
 
 
 def game():
     """
     Drive the game.
     """
-    game_intro()
+    if game_intro():
+        current_character = select_character()
 
 
 if __name__ == "__main__":
