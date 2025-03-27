@@ -118,7 +118,8 @@ def random_character():
         "stats": random_stats,
         "class": classes[random_class],
         "HP": random_hp,
-        "roll": 10
+        "roll": 10,
+        "coordinates": (8, 8)
     }
     return character
 
@@ -155,12 +156,67 @@ def select_character():
                 print("Invalid input.")
 
 
+def generate_map(level, character):
+    if level == 0:
+        wall = "🔲 "
+    else:
+        wall = random.choice(["🟨 ", "🟧 ", "🔳 ", "🔲 ", "⬜️ ", "🟦 "])
+    empty = ".  "
+    door = "🚪 "
+    lock = "🔒 "
+    room_default = [
+        [wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall],
+        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
+         empty, wall],
+        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
+         empty, wall],
+        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
+         empty, wall],
+        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
+         empty, wall],
+        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
+         empty, wall],
+        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
+         empty, wall],
+        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
+         empty, wall],
+        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
+         empty, wall],
+        [wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall]]
+    room = room_default.copy()
+    if level == 0:
+        room[0][8] = "🚪 "
+        room[4][4] = "\033[1m\033[33mW  \033[0m"
+        room[5][4] = "\033[1m\033[33mS  \033[0m"
+        room[5][3] = "\033[1m\033[33mA  \033[0m"
+        room[5][5] = "\033[1m\033[33mD  \033[0m"
+        room[3][4] = "⬆️ "
+        room[6][4] = "⬇️ "
+        room[5][2] = "⬅️ "
+        room[5][6] = "➡️ "
+        room[4][11] = "\033[1m\033[33mE  \033[0m"
+        room[4][12] = "INT"
+        room[4][13] = "ERA"
+        room[4][14] = "CT "
+        room[5][11] = "\033[1m\033[33mR  \033[0m"
+        room[5][12] = "RES"
+        room[5][13] = "TAR"
+        room[5][14] = "T  "
+        room[6][11] = "\033[1m\033[33mQ  \033[0m"
+        room[6][12] = "  Q"
+        room[6][13] = "UIT"
+        room[0][8] = door
+    return room
+
+
 def game():
     """
     Drive the game.
     """
     if game_intro():
         current_character = select_character()
+        current_map = generate_map(0, current_character)
+        display_map(current_map, current_character)
 
 
 if __name__ == "__main__":
