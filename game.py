@@ -209,6 +209,19 @@ def generate_map(level, character):
     return room
 
 
+def display_map(room, character):
+    room[character["coordinates"][0]][character["coordinates"][1]] = character["class"]["icon"]
+    map_print = ""
+    for row in room:
+        map_print += ("".join(row))
+        map_print += "\n"
+    map_print += f"""               ℹ️ \033[95m\033[1mCHARACTER INFO\033[0m ℹ️
+                       STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
+                       INT \033[32m{character["stats"]["int"]}\033[0m LUC \033[32m{character["stats"]["luc"]}\033[0m
+                         HP \033[32m{character["HP"]}\033[0m"""
+    print(map_print)
+
+
 def game():
     """
     Drive the game.
