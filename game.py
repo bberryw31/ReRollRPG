@@ -73,6 +73,46 @@ def game_intro():
                 ]
             print(random.choice(response))
 
+
+def random_character():
+    classes = {
+        "Bodybuilder": {
+            "description": "There is nothing that cannot be lifted.",
+            "main_stats": ["STR"],
+            "icon": "🦾 "
+        },
+        "Hunter": {
+            "description": "Hunts rabbits for a living.",
+            "main_stats": ["DEX"],
+            "icon": "🏹 "
+        },
+        "Fortuneteller": {
+            "description": "Sees the future, then makes it worse.",
+            "main_stats": ["INT"],
+            "icon": "🔮 "
+        },
+        "Gambler": {
+            "description": "Lives by the dice, fights by the odds.",
+            "main_stats": ["LUC"],
+            "icon": "🎰 "
+        }
+    }
+    random_stats = {
+        "str": 0,
+        "dex": 0,
+        "int": 0,
+        "luc": 0
+    }
+    stats_list = ["str", "dex", "int", "luc"]
+    total_stats = random.randint(25, 35)
+    while total_stats > 0:
+        random_stats[random.choice(stats_list)] += 1
+        total_stats -= 1
+    random_class = random.choice(list(classes.keys()))
+    character = {"stats": random_stats, "class": classes[random_class]}
+    return character
+
+
 def game():
     """
     Drive the game.
