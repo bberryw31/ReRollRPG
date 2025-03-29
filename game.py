@@ -228,7 +228,7 @@ def display_map(room, character):
 
 def get_user_action():
     while True:
-        user_input = input("\033[92mEnter your choice of action.\033[0m\n > ")
+        user_input = input("\033[2mEnter your choice of action.\033[0m\n > ")
         user_input = user_input.strip().lower()
         if user_input == "w" or user_input == "up":
             return -1, 0
@@ -239,14 +239,14 @@ def get_user_action():
         elif user_input == "d" or user_input == "right":
             return 0, 1
         elif user_input == "q" or user_input == "quit":
-            user_confirm = input("\033[92mAre you sure you want to quit? \"Y\" to confirm.\033[0m\n > ")
+            user_confirm = input("\033[91mAre you sure you want to quit? \"Y\" to confirm.\033[0m\n > ")
             user_confirm = user_confirm.strip().lower()
             if user_confirm == "y":
                 return "q"
             else:
                 continue
         elif user_input == "r" or user_input == "restart" or user_input == "re":
-            user_confirm = input("\033[92mAre you sure you want to restart? \"Y\" to confirm.\033[0m\n > ")
+            user_confirm = input("\033[91mAre you sure you want to restart? \"Y\" to confirm.\033[0m\n > ")
             user_confirm = user_confirm.strip().lower()
             if user_confirm == "y":
                 return "r"
@@ -256,15 +256,38 @@ def get_user_action():
             print("Invalid input.")
 
 
+def validate_action(character, action, room):
+    if action == "r":
+        return "r"
+    elif action == "q":
+        return "q"
+    character_new_location = (character["coordinates"][0] + action[0], character["coordinates"][1] + action[1])
+    if room[character_new_location[0]][character_new_location[1]] == ".  ":
+        return character_new_location
+    else:
+        return f"{room[character_new_location[0]][character_new_location[1]]} is blocking your way!"
+
+
 def game():
     """
     Drive the game.
     """
     if game_intro():
         stage = stage_counter(0)
+        current_stage = next(stage)
         current_character = select_character()
-        current_map = generate_map(next(stage), current_character)
-        display_map(current_map, current_character)
+        current_map = generate_map(current_stage, current_character)
+        while True:
+            display_map(current_map, current_character)
+            user_action = validate_action(current_character, get_user_action(), current_map)
+            if user_action == "r":
+                game()
+            elif user_action == "q":
+                return
+            elif type(user_action) == tuple:
+                current_character["coordinates"] = user_action
+            else:
+                print(user_action)
 
 
 if __name__ == "__main__":
