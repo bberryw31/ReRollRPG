@@ -3,6 +3,11 @@ import time
 import random
 
 
+def stage_counter(stage):
+    while True:
+        yield stage
+        stage += 1
+
 def clear_screen(stage):
     print("\033[2J\033[H", end="")
     logo_re_roll_color = "\033[1m\033[{}m".format(random.choice(range(92, 97)))
@@ -194,17 +199,13 @@ def generate_map(level, character):
         room[6][4] = "⬇️ "
         room[5][2] = "⬅️ "
         room[5][6] = "➡️ "
-        room[4][11] = "\033[1m\033[33mE  \033[0m"
-        room[4][12] = "INT"
-        room[4][13] = "ERA"
-        room[4][14] = "CT "
-        room[5][11] = "\033[1m\033[33mR  \033[0m"
-        room[5][12] = "RES"
-        room[5][13] = "TAR"
-        room[5][14] = "T  "
-        room[6][11] = "\033[1m\033[33mQ  \033[0m"
-        room[6][12] = "  Q"
-        room[6][13] = "UIT"
+        room[4][11] = "\033[1m\033[33mR  \033[0m"
+        room[4][12] = "RES"
+        room[4][13] = "TAR"
+        room[4][14] = "T  "
+        room[5][11] = "\033[1m\033[33mQ  \033[0m"
+        room[5][12] = "  Q"
+        room[5][13] = "UIT"
         room[0][8] = door
     return room
 
@@ -215,10 +216,11 @@ def display_map(room, character):
     for row in room:
         map_print += ("".join(row))
         map_print += "\n"
+    current_hp = "▊" * character["HP"]
     map_print += f"""               ℹ️ \033[95m\033[1mCHARACTER INFO\033[0m ℹ️
-                       STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
-                       INT \033[32m{character["stats"]["int"]}\033[0m LUC \033[32m{character["stats"]["luc"]}\033[0m
-                         HP \033[32m{character["HP"]}\033[0m"""
+               HP \033[32m{current_hp}\033[0m
+                  STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
+                  INT \033[32m{character["stats"]["int"]}\033[0m LUC \033[32m{character["stats"]["luc"]}\033[0m"""
     print(map_print)
 
 
@@ -227,8 +229,9 @@ def game():
     Drive the game.
     """
     if game_intro():
+        stage = stage_counter(0)
         current_character = select_character()
-        current_map = generate_map(0, current_character)
+        current_map = generate_map(next(stage), current_character)
         display_map(current_map, current_character)
 
 
