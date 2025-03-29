@@ -206,7 +206,9 @@ def generate_map(level, character):
         room[5][11] = "\033[1m\033[33mQ  \033[0m"
         room[5][12] = "  Q"
         room[5][13] = "UIT"
+        room[5][14] = "   "
         room[0][8] = door
+        room[9][8] = "\033[91m⬆ \033[0m"
     return room
 
 
@@ -222,6 +224,36 @@ def display_map(room, character):
                   STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
                   INT \033[32m{character["stats"]["int"]}\033[0m LUC \033[32m{character["stats"]["luc"]}\033[0m"""
     print(map_print)
+
+
+def get_user_action():
+    while True:
+        user_input = input("\033[92mEnter your choice of action.\033[0m\n > ")
+        user_input = user_input.strip().lower()
+        if user_input == "w" or user_input == "up":
+            return -1, 0
+        elif user_input == "s" or user_input == "down":
+            return 1, 0
+        elif user_input == "a" or user_input == "left":
+            return 0, -1
+        elif user_input == "d" or user_input == "right":
+            return 0, 1
+        elif user_input == "q" or user_input == "quit":
+            user_confirm = input("\033[92mAre you sure you want to quit? \"Y\" to confirm.\033[0m\n > ")
+            user_confirm = user_confirm.strip().lower()
+            if user_confirm == "y":
+                return "q"
+            else:
+                continue
+        elif user_input == "r" or user_input == "restart" or user_input == "re":
+            user_confirm = input("\033[92mAre you sure you want to restart? \"Y\" to confirm.\033[0m\n > ")
+            user_confirm = user_confirm.strip().lower()
+            if user_confirm == "y":
+                return "r"
+            else:
+                continue
+        else:
+            print("Invalid input.")
 
 
 def game():
