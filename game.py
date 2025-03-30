@@ -2,6 +2,7 @@ import time
 
 import random
 
+import copy
 
 def stage_counter(stage):
     while True:
@@ -213,17 +214,19 @@ def generate_map(level, character):
 
 
 def display_map(room, character):
-    room[character["coordinates"][0]][character["coordinates"][1]] = character["class"]["icon"]
+    temp_room = copy.deepcopy(room)
+    row, col = character["coordinates"]
+    temp_room[row][col] = character["class"]["icon"]
     map_print = ""
-    for row in room:
-        map_print += ("".join(row))
-        map_print += "\n"
+    for row in temp_room:
+        map_print += "".join(row) + "\n"
     current_hp = "▊" * character["HP"]
     map_print += f"""               ℹ️ \033[95m\033[1mCHARACTER INFO\033[0m ℹ️
                HP \033[32m{current_hp}\033[0m
                   STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
                   INT \033[32m{character["stats"]["int"]}\033[0m LUC \033[32m{character["stats"]["luc"]}\033[0m"""
     print(map_print)
+
 
 
 def get_user_action():
