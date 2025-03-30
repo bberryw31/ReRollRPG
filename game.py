@@ -127,6 +127,7 @@ def random_character():
         "stats": random_stats,
         "class": classes[random_class],
         "HP": random_hp,
+        "max_HP": random_hp,
         "roll": 10,
     }
     return character
@@ -168,30 +169,18 @@ def generate_map(level, character):
     wall = random.choice(["🟨 ", "🟧 ", "🔳 ", "🔲 ", "⬜️ ", "🟦 "])
     empty = ".  "
     door = "🚪 "
-    lock = "🔒 "
     reward = "🎁 "
-    room_default = [
-        [wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall],
-        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
-         empty, wall],
-        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
-         empty, wall],
-        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
-         empty, wall],
-        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
-         empty, wall],
-        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
-         empty, wall],
-        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
-         empty, wall],
-        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
-         empty, wall],
-        [wall, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty, empty,
-         empty, wall],
-        [wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall, wall]]
+    reward_spots = [(1, 1), (1, 15), (8, 1), (8, 15)]
+    room_default = (
+            [[wall] * 17] +
+            [[wall] + [empty] * 15 + [wall] for _ in range(8)] +
+            [[wall] * 17]
+    )
+    enemy = ["🐸"]
     room = room_default.copy()
     if level == 0:
-        room[0][8] = "🚪 "
+        room[0][8] = door
+        room[9][8] = "\033[91m⬆  \033[0m"
         room[4][4] = "\033[1m\033[33mW  \033[0m"
         room[5][4] = "\033[1m\033[33mS  \033[0m"
         room[5][3] = "\033[1m\033[33mA  \033[0m"
@@ -204,9 +193,14 @@ def generate_map(level, character):
         room[4][12] = "  Q"
         room[4][13] = "UIT"
         room[4][14] = "   "
-        room[0][8] = door
-        room[9][8] = "\033[91m⬆  \033[0m"
         room[3][8] = reward
+    else:
+        room[0][5] = door
+        room[0][11] = door
+        room[9][8] = "\033[91m⬆  \033[0m"
+        for _ in range(level):
+            for row, col in random.sample(reward_spots, k=min(level, len(reward_spots))):
+                room[row][col] = reward
     return room
 
 
@@ -217,7 +211,7 @@ def display_map(room, character):
     map_print = ""
     for row in temp_room:
         map_print += "".join(row) + "\n"
-    current_hp = "▊" * character["HP"]
+    current_hp = f"\033[91m❤︎\033[0m" * character["HP"] + "☙" * (character["max_HP"] - character["HP"])
     map_print += f"""               ℹ️ \033[95m\033[1mCHARACTER INFO\033[0m ℹ️
                HP \033[32m{current_hp}\033[0m
                   STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
@@ -269,7 +263,9 @@ def validate_action(character, action, room):
         if room_cleared(room):
             return "clear"
         else:
-            return "\033[91mYou must defeat all enemies!\033[0m"
+            return "\033[91mYou must first defeat all enemies!\033[0m"
+    elif "⬆" in destination:
+        return "\033[91mYou cannot go back. Adventurer, advance!\033[0m"
     else:
         return "\033[91mSomething is blocking your way...\033[0m"
 
