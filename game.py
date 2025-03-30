@@ -169,18 +169,22 @@ def generate_map(level, character):
     wall = random.choice(["🟨 ", "🟧 ", "🔳 ", "🔲 ", "⬜️ ", "🟦 "])
     empty = ".  "
     door = "🚪 "
+    locked_door = "🔒 "
     reward = "🎁 "
     reward_spots = [(1, 1), (1, 15), (8, 1), (8, 15)]
+    enemies = ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]
+    enemy_zone_left = [(row, col) for row in range(2, 8) for col in range(2, 7)]
+    enemy_zone_right = [(row, col) for row in range(2, 8) for col in range(10, 15)]
+    enemy_zone = enemy_zone_left + enemy_zone_right
     room_default = (
             [[wall] * 17] +
             [[wall] + [empty] * 15 + [wall] for _ in range(8)] +
             [[wall] * 17]
     )
-    enemy = ["🐸"]
     room = room_default.copy()
     if level == 0:
         room[0][8] = door
-        room[9][8] = "\033[91m⬆  \033[0m"
+        room[9][8] = locked_door
         room[4][4] = "\033[1m\033[33mW  \033[0m"
         room[5][4] = "\033[1m\033[33mS  \033[0m"
         room[5][3] = "\033[1m\033[33mA  \033[0m"
@@ -197,10 +201,13 @@ def generate_map(level, character):
     else:
         room[0][5] = door
         room[0][11] = door
-        room[9][8] = "\033[91m⬆  \033[0m"
-        for _ in range(level):
-            for row, col in random.sample(reward_spots, k=min(level, len(reward_spots))):
-                room[row][col] = reward
+        room[9][8] = locked_door
+        rewards = random.sample(reward_spots, k=level)
+        for row, col in rewards:
+            room[row][col] = reward
+        enemy_spot = random.sample(enemy_zone, k=level + 1)
+        for row, col in enemy_spot:
+            room[row][col] = random.choice(enemies)
     return room
 
 
@@ -211,13 +218,12 @@ def display_map(room, character):
     map_print = ""
     for row in temp_room:
         map_print += "".join(row) + "\n"
-    current_hp = f"\033[91m❤︎\033[0m" * character["HP"] + "☙" * (character["max_HP"] - character["HP"])
+    current_hp = f"\033[91m❤︎\033[0m" * character["HP"] + "❤︎" * (character["max_HP"] - character["HP"])
     map_print += f"""               ℹ️ \033[95m\033[1mCHARACTER INFO\033[0m ℹ️
                HP \033[32m{current_hp}\033[0m
                   STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
                   INT \033[32m{character["stats"]["int"]}\033[0m LUC \033[32m{character["stats"]["luc"]}\033[0m"""
     print(map_print)
-
 
 
 def get_user_action():
@@ -233,7 +239,7 @@ def get_user_action():
         elif user_input == "d" or user_input == "right":
             return 0, 1
         elif user_input == "q" or user_input == "quit":
-            user_confirm = input("\033[91mAre you sure you want to quit? \"Y\" to confirm.\033[0m\n > ")
+            user_confirm = input("\033[91mAre you sure you want to quit? Y to confirm.\033[0m\n > ")
             user_confirm = user_confirm.strip().lower()
             if user_confirm == "y":
                 return "q"
@@ -243,7 +249,7 @@ def get_user_action():
             print("Invalid input.")
 
 
-def validate_action(character, action, room):
+def validate_action(character, action, room, stage_level):
     if action == "r":
         return "r"
     elif action == "q":
@@ -253,6 +259,15 @@ def validate_action(character, action, room):
     destination = room[character_new_location[0]][character_new_location[1]]
     if destination == ".  ":
         return character_new_location
+    elif destination in ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]:
+        if fight_enemy(destination, character, stage_level):
+            open_reward()
+            room[character_new_location[0]][character_new_location[1]] = ".  "
+            return character_new_location
+        elif character["HP"] <= 0:
+            death()
+        else:
+            return character["coordinates"]
     elif destination == "🎁 ":
         if open_reward():
             room[character_new_location[0]][character_new_location[1]] = ".  "
@@ -264,14 +279,14 @@ def validate_action(character, action, room):
             return "clear"
         else:
             return "\033[91mYou must first defeat all enemies!\033[0m"
-    elif "⬆" in destination:
-        return "\033[91mYou cannot go back. Adventurer, advance!\033[0m"
+    elif destination == "🔒 ":
+        return "\033[91mThe door is locked from the other side.\033[0m"
     else:
         return "\033[91mSomething is blocking your way...\033[0m"
 
 
 def open_reward():
-    user_decision = input("\033[93mOpen Reward? (Y/N)\033[0m\n > ")
+    user_decision = input("\033[93mClaim Reward? Y to confirm.\033[0m\n > ")
     user_decision = user_decision.strip().lower()
     if user_decision == "y":
         return True
@@ -279,11 +294,109 @@ def open_reward():
         return False
 
 
+def victory_reward():
+    pass
+
+
+def fight_enemy(enemy, character, stage_level):
+    print(character)
+    enemies = {
+        "🐜 ": {
+            "name": "Tunnel Ant",
+            "HP": 5 * stage_level,
+            "atk_mod": round(1.0 * stage_level, 1)
+        },
+        "🦇 ": {
+            "name": "Cave Bat",
+            "HP": 6 * stage_level,
+            "atk_mod": round(1.1 * stage_level, 1)
+        },
+        "🦖 ": {
+            "name": "Ancient Raptor",
+            "HP": 12 * stage_level,
+            "atk_mod": round(1.5 * stage_level, 1)
+        },
+        "🐊 ": {
+            "name": "Crocodile",
+            "HP": 10 * stage_level,
+            "atk_mod": round(1.3 * stage_level, 1)
+        },
+        "🦄 ": {
+            "name": "Baby Unicorn",
+            "HP": 8 * stage_level,
+            "atk_mod": round(1.4 * stage_level, 1)
+        },
+        "🐍 ": {
+            "name": "Fat Serpent",
+            "HP": 7 * stage_level,
+            "atk_mod": round(1.3 * stage_level, 1)
+        },
+        "🦂 ": {
+            "name": "Scorpion Prince",
+            "HP": 9 * stage_level,
+            "atk_mod": round(1.3 * stage_level, 1)
+        },
+        "🐌 ": {
+            "name": "Doom-slug",
+            "HP": 20 * stage_level,
+            "atk_mod": round(0.5 * stage_level, 1)
+        },
+        "🦟 ": {
+            "name": "Mosquito Queen",
+            "HP": 4 * stage_level,
+            "atk_mod": round(1.6 * stage_level, 1)
+        }
+    }
+    user_input = input(f"\033[92mFight {enemies[enemy]["name"]}? Y to confirm.\033[0m > ").strip().lower()
+    if user_input == "y":
+        enemy_max_hp = enemies[enemy]["HP"]
+        print("\033[92mYou are in combat!\033[0m")
+        print(f" {character["class"]["icon"]} " + "\033[91m❤︎\033[0m" * character["HP"] + "\n")
+        print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
+        while enemies[enemy]["HP"] > 0 and character["HP"] > 0:
+            time.sleep(1)
+            character_damage = 0
+            for stat in character["class"]["main_stats"]:
+                character_damage += round(character["stats"][stat.lower()] * random.random())
+            if character["stats"]["luc"] * 3 + 25 > random.randint(1, 100):
+                enemies[enemy]["HP"] -= character_damage * 2
+                print("\033[92mCRITICAL HIT!\033[0m")
+                print(f"You attacked {enemies[enemy]["name"]} dealing {character_damage} damage!\n")
+                print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
+            elif character["stats"]["dex"] * 2 + 50 < random.randint(1, 100):
+                print("\033[94mYou Missed!\033[0m\n")
+            else:
+                enemies[enemy]["HP"] -= character_damage
+                print(f"You attacked {enemies[enemy]["name"]} dealing {character_damage} damage!\n")
+                print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
+            if enemies[enemy]["HP"] > 0:
+                enemy_damage = (1 + random.random()) * enemies[enemy]["atk_mod"]
+                if character["stats"]["dex"] * 2 + 25 > random.randint(1, 100):
+                    print("\033[95mYou dodged the enemy's attack!\033[0m\n")
+                else:
+                    received_damage = max(1, round(enemy_damage - random.random() * character["stats"]["str"]))
+                    print(f"{enemies[enemy]["name"]} attacked you dealing {received_damage} damage!\n")
+                    character["HP"] -= received_damage
+                    print(f"\033[91m❤︎\033[0m" * character["HP"])
+        if character["HP"] <= 0:
+            return False
+        else:
+            print(f"\033[99mYou defeated {enemies[enemy]["name"]}!")
+            return True
+    else:
+        return False
+
+
+def death():
+    pass
+
+
+
 def room_cleared(room) -> bool:
     room_is_clear = True
     for row in room:
         for col in row:
-            if col in ["👻 ", "👽 ", "👾 ", "👿 ", "🎃 "]:
+            if col in ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]:
                 room_is_clear = False
     return room_is_clear
 
@@ -303,7 +416,7 @@ def game():
             clear_screen(1)
             while True:
                 display_map(current_map, current_character)
-                user_action = validate_action(current_character, get_user_action(), current_map)
+                user_action = validate_action(current_character, get_user_action(), current_map, current_stage)
                 clear_screen(1)
                 if user_action == "q":
                     print("\n\n\033[97m\tCoward! I mean.. thanks for playing!\033[0m\n\n")
