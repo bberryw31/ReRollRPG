@@ -218,7 +218,7 @@ def display_map(room, character):
     map_print = ""
     for row in temp_room:
         map_print += "".join(row) + "\n"
-    current_hp = f"\033[91m❤︎\033[0m" * character["HP"] + "❤︎" * (character["max_HP"] - character["HP"])
+    current_hp = f"\033[91m❤︎\033[0m" * character["HP"] + "\033[2m❤︎\033[0m" * (character["max_HP"] - character["HP"])
     map_print += f"""               ℹ️ \033[95m\033[1mCHARACTER INFO\033[0m ℹ️
                HP \033[32m{current_hp}\033[0m
                   STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
@@ -388,8 +388,10 @@ def fight_enemy(enemy, character, stage_level):
 
 
 def death():
-    pass
-
+    print("You have died..")
+    user_input = input("R to restart. > ").lower().strip()
+    if user_input == "r":
+        game()
 
 
 def room_cleared(room) -> bool:
@@ -410,6 +412,7 @@ def game():
         current_character = select_character()
         stage = stage_counter(0)
         current_stage = next(stage)
+        restart_counter = 0
         while True:
             current_character["coordinates"] = 8, 8
             current_map = generate_map(current_stage, current_character)
