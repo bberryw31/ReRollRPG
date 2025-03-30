@@ -128,7 +128,6 @@ def random_character():
         "class": classes[random_class],
         "HP": random_hp,
         "roll": 10,
-        "coordinates": (8, 8)
     }
     return character
 
@@ -166,10 +165,7 @@ def select_character():
 
 
 def generate_map(level, character):
-    if level == 0:
-        wall = "🔲 "
-    else:
-        wall = random.choice(["🟨 ", "🟧 ", "🔳 ", "🔲 ", "⬜️ ", "🟦 "])
+    wall = random.choice(["🟨 ", "🟧 ", "🔳 ", "🔲 ", "⬜️ ", "🟦 "])
     empty = ".  "
     door = "🚪 "
     lock = "🔒 "
@@ -209,7 +205,7 @@ def generate_map(level, character):
         room[4][13] = "UIT"
         room[4][14] = "   "
         room[0][8] = door
-        room[9][8] = "\033[91m⬆ \033[0m"
+        room[9][8] = "\033[91m⬆  \033[0m"
         room[3][8] = reward
     return room
 
@@ -269,6 +265,11 @@ def validate_action(character, action, room):
             return character_new_location
         else:
             return character["coordinates"]
+    elif destination == "🚪 ":
+        if room_cleared(room):
+            return "clear"
+        else:
+            return "\033[91mYou must defeat all enemies!\033[0m"
     else:
         return "\033[91mSomething is blocking your way...\033[0m"
 
@@ -281,8 +282,15 @@ def open_reward():
     else:
         return False
 
-def room_cleared() -> bool:
-    pass
+
+def room_cleared(room) -> bool:
+    room_is_clear = True
+    for row in room:
+        for col in row:
+            if col in ["👻 ", "👽 ", "👾 ", "👿 ", "🎃 "]:
+                room_is_clear = False
+    return room_is_clear
+
 
 
 def game():
@@ -290,22 +298,27 @@ def game():
     Drive the game.
     """
     if game_intro():
+        current_character = select_character()
         stage = stage_counter(0)
         current_stage = next(stage)
-        current_character = select_character()
-        current_map = generate_map(current_stage, current_character)
-        clear_screen(1)
         while True:
-            display_map(current_map, current_character)
-            user_action = validate_action(current_character, get_user_action(), current_map)
+            current_character["coordinates"] = 8, 8
+            current_map = generate_map(current_stage, current_character)
             clear_screen(1)
-            if user_action == "q":
-                print("Thanks for playing!")
-                return
-            elif type(user_action) == tuple:
-                current_character["coordinates"] = user_action
-            else:
-                print(user_action)
+            while True:
+                display_map(current_map, current_character)
+                user_action = validate_action(current_character, get_user_action(), current_map)
+                clear_screen(1)
+                if user_action == "q":
+                    print("\n\n\033[97m\tCoward! I mean.. thanks for playing!\033[0m\n\n")
+                    return
+                elif type(user_action) == tuple:
+                    current_character["coordinates"] = user_action
+                elif user_action == "clear":
+                    current_stage = next(stage)
+                    break
+                else:
+                    print(user_action)
 
 
 if __name__ == "__main__":
