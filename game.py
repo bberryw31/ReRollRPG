@@ -268,7 +268,15 @@ def validate_action(character, action, room):
     if room[character_new_location[0]][character_new_location[1]] == ".  ":
         return character_new_location
     else:
-        return f"{room[character_new_location[0]][character_new_location[1]]} is blocking your way!"
+        if room[character_new_location[0]][character_new_location[1]] in ["🟨 ", "🟧 ", "🔳 ", "🔲 ", "⬜️ ", "🟦 "]:
+            return "\033[91A wall is blocking your way!\033[0m"
+        else:
+            # return f"{room[character_new_location[0]][character_new_location[1]]} is blocking your way!"
+            return "\033[91You cannot move that way!\033[0m"
+
+
+def room_cleared() -> bool:
+    pass
 
 
 def game():
