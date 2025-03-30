@@ -258,15 +258,17 @@ def validate_action(character, action, room):
         return "r"
     elif action == "q":
         return "q"
-    character_new_location = (character["coordinates"][0] + action[0], character["coordinates"][1] + action[1])
+    row, col = character["coordinates"]
+    character_new_location = (row + action[0], col + action[1])
     destination = room[character_new_location[0]][character_new_location[1]]
     if destination == ".  ":
         return character_new_location
     elif destination == "🎁 ":
         if open_reward():
+            room[character_new_location[0]][character_new_location[1]] = ".  "
             return character_new_location
         else:
-            return character["coordinates"][0], character["coordinates"][1]
+            return character["coordinates"]
     else:
         return "\033[91mSomething is blocking your way...\033[0m"
 
