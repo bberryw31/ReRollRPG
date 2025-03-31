@@ -131,7 +131,7 @@ def random_character():
         "roll": 10,
     }
     if random_class == "Gambler":
-        character["roll"] += 10
+        character["roll"] += 3
     return character
 
 
@@ -144,21 +144,24 @@ def select_character():
         print(f"""
             \033[96mNew Character\033[0m
 
-        \033[1m\033[33mSTR\033[0m : {new_character["stats"]["str"]}
-        \033[1m\033[33mDEX\033[0m : {new_character["stats"]["dex"]}
-        \033[1m\033[33mINT\033[0m : {new_character["stats"]["int"]}
-        \033[1m\033[33mLUC\033[0m : {new_character["stats"]["luc"]}
+        \033[1m\033[33mSTR\033[0m : {new_character["stats"]["str"]} \t\033[2m Reduce damage taken\033[0m
+        \033[1m\033[33mDEX\033[0m : {new_character["stats"]["dex"]} \t\033[2m Attack accuracy & dodge chance\033[0m
+        \033[1m\033[33mINT\033[0m : {new_character["stats"]["int"]} \t\033[2m Get inspired\033[0m
+        \033[1m\033[33mLUC\033[0m : {new_character["stats"]["luc"]} \t\033[2m Critical attack chance\033[0m
     
-    HP : {new_character["HP"]}
+    HP : \033[1m{new_character["HP"]}\033[0m\t\033[2m Character health points\033[0m
+    🎲 : \033[1m{new_character["roll"]}\033[0m\t\033[2m Available re-rolls in game\033[0m
+    
     Class : \033[91m{new_character["class"]["class_name"]}\033[0m {new_character["class"]["icon"]}
-        {new_character["class"]["description"]}       
-    Main Stats: \033[92m\033[1m{" + ".join(new_character["class"]["main_stats"])}\033[0m
+        \033[95m\033[2m\033[3m{new_character["class"]["description"]}\033[0m
+    
+    Main Stats: \033[92m\033[1m{" + ".join(new_character["class"]["main_stats"])}\033[0m\t\033[2m Damage modifier\033[0m
 
         1. Confirm
         2. Re-roll
         """)
         while True:
-            user_input = input("Enter 1 to Confirm, 2 to Re-roll.\n> ").strip()
+            user_input = input("\033[93mEnter 1 to confirm, 2 to re-roll.\033[0m\n> ").strip()
             if user_input == "2":
                 break
             elif user_input == "1":
@@ -342,8 +345,8 @@ def open_reward(character):
         print("\n\t 1. ", first_reward[0])
         print("\t 2. ", second_reward[0], "\n")
         while True:
-            print(f"\033[2mRemaining Re-rolls\033[0m 🎲 \033[91m\033[1m{character['roll']}\033[0m")
-            user_input = input("\033[93mEnter 1 or 2 to confirm, R to re-roll\033[0m\n > ").strip().lower()
+            print(f"\033[2mRemaining re-rolls\033[0m 🎲 \033[91m\033[1m{character['roll']}\033[0m")
+            user_input = input("\033[93mEnter 1 or 2 to confirm, R to re-roll.\033[0m\n > ").strip().lower()
             if user_input == "1":
                 first_reward[1]()
                 return True
@@ -422,7 +425,7 @@ def fight_enemy(enemy, character, stage_level):
                 enemies[enemy]["HP"] -= round(character_damage * 1.5)
                 print("\033[94m\033[1mCRITICAL HIT!\033[0m")
                 print(f"You attacked {enemies[enemy]["name"]} dealing "
-                      f"\033[91m\033[1m{character_damage * 2}\033[0m damage!\n")
+                      f"\033[91m\033[1m{round(character_damage * 1.5)}\033[0m damage!\n")
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
             elif character["stats"]["dex"] * 2 + 50 < random.randint(1, 100):
                 print("\033[94mYou Missed!\033[0m\n")
@@ -431,6 +434,8 @@ def fight_enemy(enemy, character, stage_level):
                 print(f"You attacked {enemies[enemy]["name"]} dealing "
                       f"\033[91m\033[1m{character_damage}\033[0m damage!\n")
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
+            if character["stats"]["int"] + 10 > random.randint(1, 100):
+                print("\033[95m\033[2mYou gained inspiration from combat!\033[0m 🎲 \033[93m\033[1m+1\033[0m\n")
             time.sleep(1)
             if enemies[enemy]["HP"] > 0:
                 enemy_damage = (1 + random.random()) * enemies[enemy]["atk_mod"]
@@ -439,9 +444,11 @@ def fight_enemy(enemy, character, stage_level):
                 else:
                     received_damage = max(1, round(enemy_damage - random.random() * character["stats"]["str"]))
                     print(f"{enemies[enemy]["name"]} attacked you dealing "
-                          f"\033[91m\033[1m{received_damage}\033[0m damage!\n")
+                          f"\033[91m\033[1m{received_damage} damage!\n")
                     character["HP"] -= received_damage
                     print(f" {character["class"]["icon"]} " + "\033[91m❤︎\033[0m" * character["HP"] + "\n")
+                if character["stats"]["int"] + 10 > random.randint(1, 100):
+                    print("\033[95mYou gained inspiration from combat!\033[0m 🎲 \033[93m\033[1m+1\033[0m\n")
         if character["HP"] <= 0:
             return False
         else:
