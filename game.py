@@ -117,12 +117,12 @@ def random_character():
         "luc": 0
     }
     stats_list = ["str", "dex", "int", "luc"]
-    total_stats = random.randint(25, 35)
+    total_stats = random.randint(20, 25)
     while total_stats > 0:
         random_stats[random.choice(stats_list)] += 1
         total_stats -= 1
     random_class = random.choice(list(classes.keys()))
-    random_hp = random.randint(10, 20)
+    random_hp = random.randint(5, 10)
     character = {
         "stats": random_stats,
         "class": classes[random_class],
@@ -130,6 +130,8 @@ def random_character():
         "max_HP": random_hp,
         "roll": 10,
     }
+    if random_class == "Gambler":
+        character["roll"] += 10
     return character
 
 
@@ -221,6 +223,7 @@ def display_map(room, character):
     current_hp = f"\033[91m❤︎\033[0m" * character["HP"] + "\033[2m❤︎\033[0m" * (character["max_HP"] - character["HP"])
     map_print += f"""               ℹ️ \033[95m\033[1mCHARACTER INFO\033[0m ℹ️
                HP \033[32m{current_hp}\033[0m
+                     🎲 \033[91m{character["roll"]}\033[0m
                   STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
                   INT \033[32m{character["stats"]["int"]}\033[0m LUC \033[32m{character["stats"]["luc"]}\033[0m"""
     print(map_print)
@@ -261,7 +264,9 @@ def validate_action(character, action, room, stage_level):
         return character_new_location
     elif destination in ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]:
         if fight_enemy(destination, character, stage_level):
-            open_reward()
+            if not open_reward(character):
+                room[character_new_location[0]][character_new_location[1]] = "🎁 "
+                return character["coordinates"]
             room[character_new_location[0]][character_new_location[1]] = ".  "
             return character_new_location
         elif character["HP"] <= 0:
@@ -269,7 +274,7 @@ def validate_action(character, action, room, stage_level):
         else:
             return character["coordinates"]
     elif destination == "🎁 ":
-        if open_reward():
+        if open_reward(character):
             room[character_new_location[0]][character_new_location[1]] = ".  "
             return character_new_location
         else:
@@ -285,18 +290,74 @@ def validate_action(character, action, room, stage_level):
         return "\033[91mSomething is blocking your way...\033[0m"
 
 
-def open_reward():
-    user_decision = input("\033[93mClaim Reward? Y to confirm.\033[0m\n > ")
-    user_decision = user_decision.strip().lower()
-    if user_decision == "y":
-        return True
-    else:
+def open_reward(character):
+    def reward_hp():
+        heal = round(random.uniform(0.1, 0.5) * character["max_HP"] + 0.5)
+
+        def apply():
+            character["HP"] = min(character["max_HP"], character["HP"] + heal)
+
+        return f"\033[1mHeal \033[96m{heal}\033[0m \033[1mHP\033[0m", apply
+
+    def reward_max_hp():
+        increase = random.choice([-1, 1, 2])
+
+        def apply():
+            character["max_HP"] += increase
+            character["HP"] += increase
+
+        return f"\033[1mGain \033[96m{increase}\033[0m \033[1mMax HP\033[0m", apply
+
+    def reward_stat():
+        stat = random.choice(["str", "dex", "int", "luc"])
+        increase = random.choice([-1, 1, 2])
+
+        def apply():
+            character["stats"][stat] += increase
+
+        return f"\033[1mGain \033[96m{increase} \033[0m\033[1m{stat.upper()}\033[0m", apply
+
+    def reward_random_stat():
+        stat = random.choice(["str", "dex", "int", "luc"])
+        increase = random.randint(-3, 3)
+
+        def apply():
+            character["stats"][stat] += increase
+            print(f"\n\t\033[1mGained \033[96m{increase} \033[0m\033[1m{stat.upper()}\033[0m!!")
+            time.sleep(1.5)
+
+        return f"\033[1mGain \033[96m-3 ~ +3\033[0m\033[1m random stat\033[0m", apply
+
+    user_decision = input("\033[93mClaim Reward? Y to confirm.\033[0m\n > ").strip().lower()
+    if user_decision != "y":
         return False
-
-
-def victory_reward():
-    pass
-
+    print("\n\t\033[95mOpening Reward\033[0m", end="")
+    for _ in range(3):
+        time.sleep(0.5)
+        print("\033[95m .\033[0m", end="", flush=True)
+    print("\n")
+    while True:
+        first_reward = random.choice([reward_hp, reward_stat, reward_random_stat, reward_max_hp])()
+        second_reward = random.choice([reward_hp, reward_stat, reward_random_stat, reward_max_hp])()
+        print("\n\t 1. ", first_reward[0])
+        print("\t 2. ", second_reward[0], "\n")
+        while True:
+            print(f"\033[2mRemaining Re-rolls\033[0m 🎲 \033[91m\033[1m{character['roll']}\033[0m")
+            user_input = input("\033[93mEnter 1 or 2 to confirm, R to re-roll\033[0m\n > ").strip().lower()
+            if user_input == "1":
+                first_reward[1]()
+                return True
+            elif user_input == "2":
+                second_reward[1]()
+                return True
+            elif user_input == "r":
+                if character["roll"] == 0:
+                    print("\033[91m\033[1mYou are out of re-rolls!\033[0m\n\033[2mBetter take what you have...")
+                    continue
+                character["roll"] -= 1
+                break
+            else:
+                print("Invalid input.")
 
 def fight_enemy(enemy, character, stage_level):
     enemies = {
@@ -358,10 +419,10 @@ def fight_enemy(enemy, character, stage_level):
             for stat in character["class"]["main_stats"]:
                 character_damage += round(character["stats"][stat.lower()] * random.random())
             if character["stats"]["luc"] * 3 + 25 > random.randint(1, 100):
-                enemies[enemy]["HP"] -= character_damage * 2
-                print("\033[92mCRITICAL HIT!\033[0m")
+                enemies[enemy]["HP"] -= round(character_damage * 1.5)
+                print("\033[94m\033[1mCRITICAL HIT!\033[0m")
                 print(f"You attacked {enemies[enemy]["name"]} dealing "
-                      f"\033[91m\033[1m{character_damage}\033[0m damage!\n")
+                      f"\033[91m\033[1m{character_damage * 2}\033[0m damage!\n")
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
             elif character["stats"]["dex"] * 2 + 50 < random.randint(1, 100):
                 print("\033[94mYou Missed!\033[0m\n")
@@ -370,6 +431,7 @@ def fight_enemy(enemy, character, stage_level):
                 print(f"You attacked {enemies[enemy]["name"]} dealing "
                       f"\033[91m\033[1m{character_damage}\033[0m damage!\n")
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
+            time.sleep(1)
             if enemies[enemy]["HP"] > 0:
                 enemy_damage = (1 + random.random()) * enemies[enemy]["atk_mod"]
                 if character["stats"]["dex"] * 2 + 25 > random.randint(1, 100):
