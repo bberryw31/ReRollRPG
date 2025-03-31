@@ -203,9 +203,11 @@ def generate_map(level, character):
         room[4][13] = "UIT"
         room[4][14] = "   "
         room[3][8] = reward
+    elif level == 4:
+        room[0][8] = door
+        room[9][8] = locked_door
     else:
-        room[0][5] = door
-        room[0][11] = door
+        room[0][8] = door
         room[9][8] = locked_door
         rewards = random.sample(reward_spots, k=level)
         for row, col in rewards:
@@ -435,6 +437,7 @@ def fight_enemy(enemy, character, stage_level):
                       f"\033[91m\033[1m{character_damage}\033[0m damage!\n")
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
             if character["stats"]["int"] + 10 > random.randint(1, 100):
+                character["roll"] += 1
                 print("\033[95m\033[2mYou gained inspiration from combat!\033[0m 🎲 \033[93m\033[1m+1\033[0m\n")
             time.sleep(1)
             if enemies[enemy]["HP"] > 0:
@@ -448,7 +451,7 @@ def fight_enemy(enemy, character, stage_level):
                     character["HP"] -= received_damage
                     print(f" {character["class"]["icon"]} " + "\033[91m❤︎\033[0m" * character["HP"] + "\n")
                 if character["stats"]["int"] + 10 > random.randint(1, 100):
-                    print("\033[95mYou gained inspiration from combat!\033[0m 🎲 \033[93m\033[1m+1\033[0m\n")
+                    print("\033[95m\033[2mYou gained inspiration from combat!\033[0m 🎲 \033[93m\033[1m+1\033[0m\n")
         if character["HP"] <= 0:
             return False
         else:
