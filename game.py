@@ -299,7 +299,6 @@ def victory_reward():
 
 
 def fight_enemy(enemy, character, stage_level):
-    print(character)
     enemies = {
         "🐜 ": {
             "name": "Tunnel Ant",
@@ -347,10 +346,10 @@ def fight_enemy(enemy, character, stage_level):
             "atk_mod": round(1.6 * stage_level, 1)
         }
     }
-    user_input = input(f"\033[92mFight {enemies[enemy]["name"]}? Y to confirm.\033[0m > ").strip().lower()
-    if user_input == "y":
-        enemy_max_hp = enemies[enemy]["HP"]
-        print("\033[92mYou are in combat!\033[0m")
+    user_input = input(f"\033[93mFight \033[91m\033[1m{enemies[enemy]["name"]}\033[0m"
+                       f"\033[93m? Y to confirm.\033[0m > ")
+    if user_input.strip().lower() == "y":
+        print("\n\033[91m\033[1mYou are in combat!\033[0m\n")
         print(f" {character["class"]["icon"]} " + "\033[91m❤︎\033[0m" * character["HP"] + "\n")
         print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
         while enemies[enemy]["HP"] > 0 and character["HP"] > 0:
@@ -361,13 +360,15 @@ def fight_enemy(enemy, character, stage_level):
             if character["stats"]["luc"] * 3 + 25 > random.randint(1, 100):
                 enemies[enemy]["HP"] -= character_damage * 2
                 print("\033[92mCRITICAL HIT!\033[0m")
-                print(f"You attacked {enemies[enemy]["name"]} dealing {character_damage} damage!\n")
+                print(f"You attacked {enemies[enemy]["name"]} dealing "
+                      f"\033[91m\033[1m{character_damage}\033[0m damage!\n")
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
             elif character["stats"]["dex"] * 2 + 50 < random.randint(1, 100):
                 print("\033[94mYou Missed!\033[0m\n")
             else:
                 enemies[enemy]["HP"] -= character_damage
-                print(f"You attacked {enemies[enemy]["name"]} dealing {character_damage} damage!\n")
+                print(f"You attacked {enemies[enemy]["name"]} dealing "
+                      f"\033[91m\033[1m{character_damage}\033[0m damage!\n")
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
             if enemies[enemy]["HP"] > 0:
                 enemy_damage = (1 + random.random()) * enemies[enemy]["atk_mod"]
@@ -375,9 +376,10 @@ def fight_enemy(enemy, character, stage_level):
                     print("\033[95mYou dodged the enemy's attack!\033[0m\n")
                 else:
                     received_damage = max(1, round(enemy_damage - random.random() * character["stats"]["str"]))
-                    print(f"{enemies[enemy]["name"]} attacked you dealing {received_damage} damage!\n")
+                    print(f"{enemies[enemy]["name"]} attacked you dealing "
+                          f"\033[91m\033[1m{received_damage}\033[0m damage!\n")
                     character["HP"] -= received_damage
-                    print(f"\033[91m❤︎\033[0m" * character["HP"])
+                    print(f" {character["class"]["icon"]} " + "\033[91m❤︎\033[0m" * character["HP"] + "\n")
         if character["HP"] <= 0:
             return False
         else:
