@@ -26,6 +26,13 @@ def stage_counter(stage):
 
 
 def clear_screen(stage):
+    """
+    Clear the terminal screen and display the game logo based on the current stage.
+
+    :param stage: an integer representing the current stage
+    :precondition: stage must be a non-negative integer
+    :postcondition: clears the screen and prints the full game logo or a shortened version depending on the stage
+    """
     print("\033[2J\033[H", end="")
     logo_re_roll_color = "\033[1m\033[{}m".format(random.choice(range(92, 97)))
     logo_re_roll = r"""
