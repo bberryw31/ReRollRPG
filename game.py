@@ -115,6 +115,21 @@ def game_intro():
 
 
 def random_character(class_pool):
+    """
+    Generate a random character with randomized stats, HP, and class.
+
+    :param class_pool: a list of available classes
+    :precondition: class_pool must be a non-empty list
+    :precondition: class_pool must be a homogenous list of strings
+    :precondition: element of class_pool must be a key in classes dictionary
+    :postcondition: select a random class from class_pool
+    :postcondition: assign 20–25 total stat points randomly across STR, DEX, INT, and LUC
+    :postcondition: generate a random HP value between 5 and 10
+    :postcondition: assign HP value to max HP
+    :postcondition: assign 10 re-roll counts and 13 if class is Gambler
+    :postcondition: generate a dictionary containing all the generated character attributes
+    :return: a dictionary representing the generated character
+    """
     classes = {
         "Bodybuilder": {
             "class_name": "Bodybuilder",
