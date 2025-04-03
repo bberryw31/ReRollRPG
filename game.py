@@ -4,10 +4,12 @@ import random
 
 import copy
 
+
 def stage_counter(stage):
     while True:
         yield stage
         stage += 1
+
 
 def clear_screen(stage):
     print("\033[2J\033[H", end="")
@@ -170,7 +172,7 @@ def select_character():
                 print("Invalid input.")
 
 
-def generate_map(level, character):
+def generate_map(level):
     wall = random.choice(["🟨 ", "🟧 ", "🔳 ", "🔲 ", "⬜️ ", "🟦 "])
     empty = ".  "
     door = "🚪 "
@@ -178,8 +180,8 @@ def generate_map(level, character):
     reward = "🎁 "
     reward_spots = [(1, 1), (1, 15), (8, 1), (8, 15)]
     enemies = ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]
-    enemy_zone_left = [(row, col) for row in range(2, 8) for col in range(2, 7)]
-    enemy_zone_right = [(row, col) for row in range(2, 8) for col in range(10, 15)]
+    enemy_zone_left = [(row, col) for row in range(3, 7) for col in range(3, 6)]
+    enemy_zone_right = [(row, col) for row in range(3, 7) for col in range(11, 14)]
     enemy_zone = enemy_zone_left + enemy_zone_right
     room_default = (
             [[wall] * 17] +
@@ -212,10 +214,25 @@ def generate_map(level, character):
         rewards = random.sample(reward_spots, k=level)
         for row, col in rewards:
             room[row][col] = reward
-        enemy_spot = random.sample(enemy_zone, k=level + 1)
-        for row, col in enemy_spot:
-            room[row][col] = random.choice(enemies)
+        water_generator(enemy_zone_left, room)
+        water_generator(enemy_zone_right, room)
+        enemy_count = 0
+        while enemy_count < level + 1:
+            enemy_row, enemy_col = random.choice(enemy_zone)
+            if room[enemy_row][enemy_col] == ".  ":
+                room[enemy_row][enemy_col] = random.choice(enemies)
+                enemy_count += 1
     return room
+
+
+def water_generator(zone, room):
+    water_row, water_col = random.choice(zone)
+    water_row_range = range(water_row - 1, water_row + 2)
+    water_col_range = range(water_col - 1, water_col + 2)
+    water_spots = [(row, col) for row in water_row_range for col in water_col_range]
+    waters = random.sample(water_spots, k=random.randint(1, 9))
+    for row, col in waters:
+        room[row][col] = "🌀 "
 
 
 def display_map(room, character):
@@ -275,7 +292,7 @@ def validate_action(character, action, room, stage_level):
             room[character_new_location[0]][character_new_location[1]] = ".  "
             return character_new_location
         elif character["HP"] <= 0:
-            death()
+            return "dead"
         else:
             return character["coordinates"]
     elif destination == "🎁 ":
@@ -461,13 +478,6 @@ def fight_enemy(enemy, character, stage_level):
         return False
 
 
-def death():
-    print("You have died..")
-    user_input = input("R to restart. > ").lower().strip()
-    if user_input == "r":
-        game()
-
-
 def room_cleared(room) -> bool:
     room_is_clear = True
     for row in room:
@@ -477,34 +487,54 @@ def room_cleared(room) -> bool:
     return room_is_clear
 
 
-
 def game():
     """
     Drive the game.
     """
-    if game_intro():
-        current_character = select_character()
-        stage = stage_counter(0)
-        current_stage = next(stage)
-        restart_counter = 0
-        while True:
-            current_character["coordinates"] = 8, 8
-            current_map = generate_map(current_stage, current_character)
-            clear_screen(1)
-            while True:
-                display_map(current_map, current_character)
-                user_action = validate_action(current_character, get_user_action(), current_map, current_stage)
+    restart = True
+    restart_counter = 0
+    while restart:
+        restart = False
+        dead = False
+        if game_intro():
+            current_character = select_character()
+            stage = stage_counter(0)
+            current_stage = next(stage)
+            while not dead:
+                current_character["coordinates"] = 8, 8
+                current_map = generate_map(current_stage)
                 clear_screen(1)
-                if user_action == "q":
-                    print("\n\n\033[97m\tCoward! I mean.. thanks for playing!\033[0m\n\n")
-                    return
-                elif type(user_action) == tuple:
-                    current_character["coordinates"] = user_action
-                elif user_action == "clear":
-                    current_stage = next(stage)
-                    break
-                else:
-                    print(user_action)
+                while not dead:
+                    display_map(current_map, current_character)
+                    user_action = validate_action(current_character, get_user_action(), current_map, current_stage)
+                    clear_screen(1)
+                    if user_action == "q":
+                        print("\n\n\033[97m\tCoward! I mean.. thanks for playing!\033[0m\n\n")
+                        return
+                    elif user_action == "dead":
+                        print("\n\n\033[91m\tYou have died...\033[0m\n")
+                        dead = True
+                        while True:
+                            user_restart = input("\033[97mEnter R to restart, Q to quit.\033[0m\n > ").strip().lower()
+                            if user_restart == "r":
+                                restart = True
+                                restart_counter += 1
+                                break
+                            elif user_restart == "q":
+                                print("\033[1m\033[97m\t\nThanks for playing!\033[0m\n")
+                                return
+                            else:
+                                print("Invalid input.")
+                    elif type(user_action) == tuple:
+                        current_character["coordinates"] = user_action
+                    elif user_action == "clear":
+                        if current_stage == 4:
+                            print("\033[1m\033[97m\t\nThanks for playing!\033[0m\n")
+                        else:
+                            current_stage = next(stage)
+                            break
+                    else:
+                        print(user_action)
 
 
 if __name__ == "__main__":
