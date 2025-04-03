@@ -6,6 +6,20 @@ import copy
 
 
 def stage_counter(stage):
+    """
+    Return the current stage number starting from the given value.
+
+    :param stage: an integer representing the first stage number
+    :precondition: stage must be a non-negative integer
+    :postcondition: generate the current stage number
+    :return: the next stage number
+
+    >>> counter = stage_counter(0)
+    >>> next(counter)
+    0
+    >>> next(counter)
+    1
+    """
     while True:
         yield stage
         stage += 1
@@ -55,7 +69,7 @@ def clear_screen(stage):
 def game_intro():
     clear_screen(0)
     print("\n\033[92m                            🎲 Welcome to ReRollRPG 🎲\033[0m")
-    print("\n\033[2m\tEnter S or 'start' to begin your adventure.\033[0m")
+    print("\n\033[2m\tEnter \'S\' or 'Start' to begin your adventure.\033[0m")
     error_counter = 0
     while True:
         user_input = input("\n > ").strip().lower()
@@ -168,18 +182,35 @@ def random_character(class_pool):
 
 
 def select_character(class_pool, restart_count):
+    """
+    Prompt the user to confirm or re-roll the generated character
+
+    :param class_pool: a list of available classes
+    :param restart_count: an integer representing the number of game restarts
+    :precondition: class_pool must be a non-empty list
+    :precondition: class_pool must be a homogenous list of strings
+    :precondition: restart_count must be an integer
+    :postcondition: unlock the "Jimmy" class if restart_count is 2
+    :postcondition: unlock the "Gambler" class if the user re-rolls 5 times
+    :postcondition: display the attributes of a newly generated character
+    :postcondition: prompt the user to confirm or re-roll character
+    :postcondition: return the generated character if the user confirms
+    :postcondition: generate and display a new random character if user re-rolls
+    :postcondition: display an error message if user input is invalid
+    :return: a dictionary representing a character
+    """
     roll_count = 0
     while True:
         clear_screen(1)
         print("\033[1mSelect a character!\n")
-        if restart_count == 0:
+        if restart_count == 2:
             class_pool.append("Jimmy")
-            print("\t\033[2mNew class unlocked: "
+            print("\t\033[2mUnlocked Class: "
                   "\033[0m\033[91m\033[1mJimmy Jimster the legendary adventurer\033[0m 👑")
             restart_count += 1
         if roll_count == 5:
             class_pool.append("Gambler")
-            print("\t\033[2mNew class unlocked: "
+            print("\t\033[2mUnlocked Class: "
                   "\033[0m\033[91m\033[1mGambler\033[0m 🎰")
         new_character = random_character(class_pool)
         print(f"""
@@ -202,7 +233,9 @@ def select_character(class_pool, restart_count):
         2. Re-roll
         """)
         while True:
-            user_input = input("\033[93mEnter 1 to confirm, 2 to re-roll.\033[0m\n > ").strip()
+            user_input = input(
+                "\033[93mEnter \'1\' to confirm, \'2\' to re-roll.\033[0m\n > "
+            ).strip()
             if user_input == "2":
                 roll_count += 1
                 break
@@ -301,7 +334,9 @@ def display_map(room, character):
 
 def get_user_action():
     while True:
-        user_input = input("\033[2mEnter your choice of action.\033[0m\n > ")
+        user_input = input(
+            "\033[2mEnter your choice of action.\033[0m\n > "
+        )
         user_input = user_input.strip().lower()
         if user_input == "w" or user_input == "up":
             return -1, 0
@@ -312,7 +347,7 @@ def get_user_action():
         elif user_input == "d" or user_input == "right":
             return 0, 1
         elif user_input == "q" or user_input == "quit":
-            user_confirm = input("\033[91mAre you sure you want to quit? Y to confirm.\033[0m\n > ")
+            user_confirm = input("\033[91mAre you sure you want to quit? \'Y\' to confirm.\033[0m\n > ")
             user_confirm = user_confirm.strip().lower()
             if user_confirm == "y":
                 return "q"
@@ -368,7 +403,7 @@ def validate_action(character, action, room, stage_level):
 
 def drink_water(character):
     user_decision = input("\033[91m\033[2mWater does not seem so clean... \033[0m\n"
-                          "\033[93mDrink water? Y to confirm.\n"
+                          "\033[93mDrink water? \nEnter \'Y\' to confirm.\n"
                           "\033[0m > ").strip().lower()
     if user_decision == "y":
         odds = random.randint(1, 100)
@@ -428,7 +463,9 @@ def open_reward(character):
 
         return f"\033[1mGain \033[96m-2 ~ +3\033[0m\033[1m random stat\033[0m", apply
 
-    user_decision = input("\033[93mClaim Reward? Y to confirm.\033[0m\n > ").strip().lower()
+    user_decision = input(
+        "\033[93mClaim Reward? \nEnter \'Y\' to confirm.\033[0m\n > "
+    ).strip().lower()
     if user_decision != "y":
         return False
     print("\n\t\033[95mOpening Reward\033[0m", end="")
@@ -443,7 +480,9 @@ def open_reward(character):
         print("\t 2. ", second_reward[0], "\n")
         while True:
             print(f"\033[2mRemaining re-rolls\033[0m 🎲 \033[91m\033[1m{character['roll']}\033[0m")
-            user_input = input("\033[93mEnter 1 or 2 to confirm, R to re-roll.\033[0m\n > ").strip().lower()
+            user_input = input(
+                "\033[93mEnter \'1\' or \'2\' to confirm, \'R\' to re-roll.\033[0m\n > "
+            ).strip().lower()
             if user_input == "1":
                 first_reward[1]()
                 return True
@@ -513,7 +552,7 @@ def fight_enemy(enemy, character, stage_level):
         }
     }
     user_input = input(f"\033[93mFight \033[91m\033[1m{enemies[enemy]["name"]}\033[0m"
-                       f"\033[93m? Y to confirm.\033[0m\n > ")
+                       f"\033[93m? \nEnter \'Y\' to confirm.\033[0m\n > ")
     if user_input.strip().lower() == "y":
         print("\n\033[91m\033[1mYou are in combat!\033[0m\n")
         print(f" {character["class"]["icon"]} " + "\033[91m❤︎\033[0m" * character["HP"] + "\n")
@@ -601,7 +640,9 @@ def game():
                         print("\n\n\033[91m\tYou have died...\033[0m\n")
                         dead = True
                         while True:
-                            user_restart = input("\033[93mEnter R to restart, Q to quit.\033[0m\n > ").strip().lower()
+                            user_restart = input(
+                                "\033[93mEnter \'R\' to restart, \'Q\' to quit.\033[0m\n > "
+                            ).strip().lower()
                             if user_restart == "r":
                                 restart = True
                                 restart_counter += 1
@@ -617,7 +658,8 @@ def game():
                         if current_stage == 4:
                             print("\033[1m\033[93m\n\tDungeon Cleared\033[0m\n")
                             user_restart = input(
-                                "\033[93mEnter R to play again, any other key to quit.\033[0m\n > ").strip().lower()
+                                "\033[93mEnter \'R\' to play again, any other key to quit.\033[0m\n > "
+                            ).strip().lower()
                             if user_restart == "r":
                                 restart = True
                                 restart_counter += 1
