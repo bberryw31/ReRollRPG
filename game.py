@@ -74,6 +74,14 @@ def clear_screen(stage):
 
 
 def game_intro():
+    """
+    Display the game intro screen and wait for the user to start the game.
+
+    :precondition: user's input must be standard input
+    :postcondition: display welcome message and loading animation if the user enters 'start' or 's'
+    :postcondition: display random error messages for invalid inputs
+    :return: True when a valid input is received to start the game
+    """
     clear_screen(0)
     print("\n\033[92m                            🎲 Welcome to ReRollRPG 🎲\033[0m")
     print("\n\033[2m\tEnter \'S\' or 'Start' to begin your adventure.\033[0m")
