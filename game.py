@@ -163,7 +163,7 @@ def select_character():
         2. Re-roll
         """)
         while True:
-            user_input = input("\033[93mEnter 1 to confirm, 2 to re-roll.\033[0m\n> ").strip()
+            user_input = input("\033[93mEnter 1 to confirm, 2 to re-roll.\033[0m\n > ").strip()
             if user_input == "2":
                 break
             elif user_input == "1":
@@ -233,6 +233,7 @@ def water_generator(zone, room):
     waters = random.sample(water_spots, k=random.randint(1, 9))
     for row, col in waters:
         room[row][col] = "🌀 "
+    room[water_row][water_col] = "🌀 "
 
 
 def display_map(room, character):
@@ -301,6 +302,12 @@ def validate_action(character, action, room, stage_level):
             return character_new_location
         else:
             return character["coordinates"]
+    elif destination == "🌀 ":
+        drink_water(character)
+        if character["HP"] <= 0:
+            return "dead"
+        else:
+            return character["coordinates"]
     elif destination == "🚪 ":
         if room_cleared(room):
             return "clear"
@@ -310,6 +317,30 @@ def validate_action(character, action, room, stage_level):
         return "\033[91mThe door is locked from the other side.\033[0m"
     else:
         return "\033[91mSomething is blocking your way...\033[0m"
+
+
+def drink_water(character):
+    user_decision = input("\033[91m\033[2mWater does not seem so clean... \033[0m\n"
+                          "\033[93mDrink water? Y to confirm.\n"
+                          "\033[0m > ").strip().lower()
+    if user_decision == "y":
+        odds = random.randint(1, 100)
+        if odds < 25:
+            random_stat = random.choice(["str", "dex", "int", "luc"])
+            random_change = random.randint(1, 2)
+            character["stats"][random_stat] += random_change
+            print(f"\033[94mYou feel stronger. \033[0m\n"
+                  f"\t\033[1mGain \033[96m+{random_change}\033[0m \033[1m{random_stat.upper()}\033[0m!")
+        elif odds < 50:
+            random_increase = random.choice(range(1, 2))
+            character["HP"] += random_increase
+            print(f"\033[93mYou feel refreshed. \033[0m\n"
+                  f"\t\033[1mHeal \033[96m{random_increase}\033[0m \033[1mHP\033[0m!")
+        else:
+            character["HP"] -= 1
+            print(f"\033[91mYou have been poisoned! \033[0m\n"
+                  f"\t\033[1mLose \033[96m1\033[0m \033[1mHP\033[0m")
+        time.sleep(2)
 
 
 def open_reward(character):
@@ -322,7 +353,7 @@ def open_reward(character):
         return f"\033[1mHeal \033[96m{heal}\033[0m \033[1mHP\033[0m", apply
 
     def reward_max_hp():
-        increase = random.choice([-1, 1, 2])
+        increase = random.choice([1, 2])
 
         def apply():
             character["max_HP"] += increase
@@ -332,7 +363,7 @@ def open_reward(character):
 
     def reward_stat():
         stat = random.choice(["str", "dex", "int", "luc"])
-        increase = random.choice([-1, 1, 2])
+        increase = random.choice([1, 2])
 
         def apply():
             character["stats"][stat] += increase
@@ -341,14 +372,14 @@ def open_reward(character):
 
     def reward_random_stat():
         stat = random.choice(["str", "dex", "int", "luc"])
-        increase = random.randint(-3, 3)
+        increase = random.randint(-2, 3)
 
         def apply():
             character["stats"][stat] += increase
             print(f"\n\t\033[1mGained \033[96m{increase} \033[0m\033[1m{stat.upper()}\033[0m!!")
             time.sleep(1.5)
 
-        return f"\033[1mGain \033[96m-3 ~ +3\033[0m\033[1m random stat\033[0m", apply
+        return f"\033[1mGain \033[96m-2 ~ +3\033[0m\033[1m random stat\033[0m", apply
 
     user_decision = input("\033[93mClaim Reward? Y to confirm.\033[0m\n > ").strip().lower()
     if user_decision != "y":
@@ -385,59 +416,59 @@ def fight_enemy(enemy, character, stage_level):
     enemies = {
         "🐜 ": {
             "name": "Tunnel Ant",
-            "HP": 5 * stage_level,
-            "atk_mod": round(1.0 * stage_level, 1)
+            "HP": 3 * stage_level,
+            "atk_mod": round(0.8 * stage_level, 1)
         },
         "🦇 ": {
             "name": "Cave Bat",
-            "HP": 6 * stage_level,
-            "atk_mod": round(1.1 * stage_level, 1)
+            "HP": 4 * stage_level,
+            "atk_mod": round(1.0 * stage_level, 1)
         },
         "🦖 ": {
             "name": "Ancient Raptor",
-            "HP": 12 * stage_level,
-            "atk_mod": round(1.5 * stage_level, 1)
+            "HP": 8 * stage_level,
+            "atk_mod": round(1.3 * stage_level, 1)
         },
         "🐊 ": {
-            "name": "Crocodile",
-            "HP": 10 * stage_level,
-            "atk_mod": round(1.3 * stage_level, 1)
+            "name": "Angry Crocodile",
+            "HP": 7 * stage_level,
+            "atk_mod": round(1.2 * stage_level, 1)
         },
         "🦄 ": {
             "name": "Baby Unicorn",
-            "HP": 8 * stage_level,
-            "atk_mod": round(1.4 * stage_level, 1)
+            "HP": 6 * stage_level,
+            "atk_mod": round(1.3 * stage_level, 1)
         },
         "🐍 ": {
             "name": "Fat Serpent",
-            "HP": 7 * stage_level,
-            "atk_mod": round(1.3 * stage_level, 1)
+            "HP": 5 * stage_level,
+            "atk_mod": round(1.1 * stage_level, 1)
         },
         "🦂 ": {
             "name": "Scorpion Prince",
-            "HP": 9 * stage_level,
-            "atk_mod": round(1.3 * stage_level, 1)
+            "HP": 3 * stage_level,
+            "atk_mod": round(1.1 * stage_level, 1)
         },
         "🐌 ": {
             "name": "Doom-slug",
-            "HP": 20 * stage_level,
-            "atk_mod": round(0.5 * stage_level, 1)
+            "HP": 12 * stage_level,
+            "atk_mod": round(0.3 * stage_level, 1)
         },
         "🦟 ": {
-            "name": "Mosquito Queen",
-            "HP": 4 * stage_level,
-            "atk_mod": round(1.6 * stage_level, 1)
+            "name": "Giant Mosquito",
+            "HP": 5 * stage_level,
+            "atk_mod": round(1.0 * stage_level, 1)
         }
     }
     user_input = input(f"\033[93mFight \033[91m\033[1m{enemies[enemy]["name"]}\033[0m"
-                       f"\033[93m? Y to confirm.\033[0m > ")
+                       f"\033[93m? Y to confirm.\033[0m\n > ")
     if user_input.strip().lower() == "y":
         print("\n\033[91m\033[1mYou are in combat!\033[0m\n")
         print(f" {character["class"]["icon"]} " + "\033[91m❤︎\033[0m" * character["HP"] + "\n")
         print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
         while enemies[enemy]["HP"] > 0 and character["HP"] > 0:
             time.sleep(1)
-            character_damage = 0
+            character_damage = 1
             for stat in character["class"]["main_stats"]:
                 character_damage += round(character["stats"][stat.lower()] * random.random())
             if character["stats"]["luc"] * 3 + 25 > random.randint(1, 100):
@@ -446,7 +477,7 @@ def fight_enemy(enemy, character, stage_level):
                 print(f"You attacked {enemies[enemy]["name"]} dealing "
                       f"\033[91m\033[1m{round(character_damage * 1.5)}\033[0m damage!\n")
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
-            elif character["stats"]["dex"] * 2 + 50 < random.randint(1, 100):
+            elif character["stats"]["dex"] * 2 + 60 < random.randint(1, 100):
                 print("\033[94mYou Missed!\033[0m\n")
             else:
                 enemies[enemy]["HP"] -= character_damage
