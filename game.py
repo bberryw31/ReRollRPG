@@ -167,12 +167,21 @@ def random_character(class_pool):
     return character
 
 
-def select_character(class_pool):
-    clear_screen(1)
-    print("Select a character!")
+def select_character(class_pool, restart_count):
+    roll_count = 0
     while True:
-        new_character = random_character(class_pool)
         clear_screen(1)
+        print("\033[1mSelect a character!\n")
+        if restart_count == 0:
+            class_pool.append("Jimmy")
+            print("\t\033[2mNew class unlocked: "
+                  "\033[0m\033[91m\033[1mJimmy Jimster the legendary adventurer\033[0m 👑")
+            restart_count += 1
+        if roll_count == 5:
+            class_pool.append("Gambler")
+            print("\t\033[2mNew class unlocked: "
+                  "\033[0m\033[91m\033[1mGambler\033[0m 🎰")
+        new_character = random_character(class_pool)
         print(f"""
             \033[96mNew Character\033[0m
 
@@ -195,6 +204,7 @@ def select_character(class_pool):
         while True:
             user_input = input("\033[93mEnter 1 to confirm, 2 to re-roll.\033[0m\n > ").strip()
             if user_input == "2":
+                roll_count += 1
                 break
             elif user_input == "1":
                 return new_character
@@ -567,15 +577,13 @@ def game():
     restart = True
     restart_counter = 0
     class_pool = [
-        "Bodybuilder", "Hunter", "Fortuneteller", "Gambler", "Chef", "Pro Wrestler", "Gamer", "Boxer"
+        "Bodybuilder", "Hunter", "Fortuneteller", "Chef", "Pro Wrestler", "Gamer", "Boxer"
     ]
     while restart:
-        if restart_counter > 2 and "Jimmy" not in class_pool:
-            class_pool.append("Jimmy")
         restart = False
         dead = False
         if game_intro():
-            current_character = select_character(class_pool)
+            current_character = select_character(class_pool, restart_counter)
             stage = stage_counter(0)
             current_stage = next(stage)
             while not dead:
