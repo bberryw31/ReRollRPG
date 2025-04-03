@@ -55,13 +55,13 @@ def clear_screen(stage):
 def game_intro():
     clear_screen(0)
     print("\n\033[92m                            🎲 Welcome to ReRollRPG 🎲\033[0m")
-    print("\n\033[2m   Type 'start' to begin your adventure.\033[0m")
+    print("\n\033[2m\tEnter S or 'start' to begin your adventure.\033[0m")
     error_counter = 0
     while True:
-        user_input = input("\n> ").strip().lower()
+        user_input = input("\n > ").strip().lower()
         if user_input == "start" or user_input == "s":
             start_counter = 1
-            while start_counter < 3:
+            while start_counter < 5:
                 clear_screen(0)
                 print("\n\033[0mLoading game" + ("." * start_counter))
                 start_counter += 1
@@ -85,19 +85,31 @@ def game_intro():
             print(random.choice(response))
 
 
-def random_character():
+def random_character(class_pool):
     classes = {
         "Bodybuilder": {
             "class_name": "Bodybuilder",
-            "description": "There is nothing that cannot be lifted.",
+            "description": "Brain’s on cooldown, biceps are not.",
             "main_stats": ["STR"],
             "icon": "🦾 "
         },
+        "Boxer": {
+            "class_name": "Boxer",
+            "description": "Footwork silky, punches filthy.",
+            "main_stats": ["STR", "DEX"],
+            "icon": "🥊 "
+        },
         "Hunter": {
             "class_name": "Hunter",
-            "description": "Hunts rabbits for a living.",
+            "description": "Hope I don't run out of arrows.",
             "main_stats": ["DEX"],
             "icon": "🏹 "
+        },
+        "Chef": {
+            "class_name": "Chef",
+            "description": "Your fate is medium rare.",
+            "main_stats": ["DEX", "INT"],
+            "icon": "🔪 "
         },
         "Fortuneteller": {
             "class_name": "Fortuneteller",
@@ -105,11 +117,29 @@ def random_character():
             "main_stats": ["INT"],
             "icon": "🔮 "
         },
+        "Gamer": {
+            "class_name": "Gamer",
+            "description": "Powered by instant noodles and energy drinks.",
+            "main_stats": ["INT", "LUC"],
+            "icon": "🎮 "
+        },
         "Gambler": {
             "class_name": "Gambler",
             "description": "Lives by the dice, fights by the odds.",
             "main_stats": ["LUC"],
             "icon": "🎰 "
+        },
+        "Pro Wrestler": {
+            "class_name": "Pro Wrestler",
+            "description": "Delivers justice from the top rope.",
+            "main_stats": ["STR", "LUC"],
+            "icon": "👹 "
+        },
+        "Jimmy": {
+            "class_name": "Jimmy",
+            "description": "Jimmy Jimster, the Legendary Adventurer.",
+            "main_stats": ["STR", "DEX", "INT", "LUC"],
+            "icon": "👑 "
         }
     }
     random_stats = {
@@ -123,7 +153,7 @@ def random_character():
     while total_stats > 0:
         random_stats[random.choice(stats_list)] += 1
         total_stats -= 1
-    random_class = random.choice(list(classes.keys()))
+    random_class = random.choice(class_pool)
     random_hp = random.randint(5, 10)
     character = {
         "stats": random_stats,
@@ -137,11 +167,11 @@ def random_character():
     return character
 
 
-def select_character():
+def select_character(class_pool):
     clear_screen(1)
     print("Select a character!")
     while True:
-        new_character = random_character()
+        new_character = random_character(class_pool)
         clear_screen(1)
         print(f"""
             \033[96mNew Character\033[0m
@@ -536,11 +566,16 @@ def game():
     """
     restart = True
     restart_counter = 0
+    class_pool = [
+        "Bodybuilder", "Hunter", "Fortuneteller", "Gambler", "Chef", "Pro Wrestler", "Gamer", "Boxer"
+    ]
     while restart:
+        if restart_counter > 2 and "Jimmy" not in class_pool:
+            class_pool.append("Jimmy")
         restart = False
         dead = False
         if game_intro():
-            current_character = select_character()
+            current_character = select_character(class_pool)
             stage = stage_counter(0)
             current_stage = next(stage)
             while not dead:
@@ -558,7 +593,7 @@ def game():
                         print("\n\n\033[91m\tYou have died...\033[0m\n")
                         dead = True
                         while True:
-                            user_restart = input("\033[97mEnter R to restart, Q to quit.\033[0m\n > ").strip().lower()
+                            user_restart = input("\033[93mEnter R to restart, Q to quit.\033[0m\n > ").strip().lower()
                             if user_restart == "r":
                                 restart = True
                                 restart_counter += 1
@@ -574,7 +609,7 @@ def game():
                         if current_stage == 4:
                             print("\033[1m\033[93m\n\tDungeon Cleared\033[0m\n")
                             user_restart = input(
-                                "\033[97mEnter R to play again, any other key to quit.\033[0m\n > ").strip().lower()
+                                "\033[93mEnter R to play again, any other key to quit.\033[0m\n > ").strip().lower()
                             if user_restart == "r":
                                 restart = True
                                 restart_counter += 1
