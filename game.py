@@ -118,7 +118,7 @@ def random_character(class_pool):
     """
     Generate a random character with randomized stats, HP, and class.
 
-    :param class_pool: a list of available classes
+    :param class_pool: a list of available classes as strings
     :precondition: class_pool must be a non-empty list
     :precondition: class_pool must be a homogenous list of strings
     :precondition: element of class_pool must be a key in classes dictionary
@@ -215,7 +215,7 @@ def select_character(class_pool, restart_count):
     """
     Prompt the user to confirm or re-roll the generated character
 
-    :param class_pool: a list of available classes
+    :param class_pool: a list of available classes as strings
     :param restart_count: an integer representing the number of game restarts
     :precondition: class_pool must be a non-empty list
     :precondition: class_pool must be a homogenous list of strings
