@@ -180,6 +180,7 @@ def generate_map(level):
     reward = "🎁 "
     reward_spots = [(1, 1), (1, 15), (8, 1), (8, 15)]
     enemies = ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]
+    boss = "💀 "
     enemy_zone_left = [(row, col) for row in range(3, 7) for col in range(3, 6)]
     enemy_zone_right = [(row, col) for row in range(3, 7) for col in range(11, 14)]
     enemy_zone = enemy_zone_left + enemy_zone_right
@@ -206,8 +207,14 @@ def generate_map(level):
         room[4][14] = "   "
         room[3][8] = reward
     elif level == 4:
+        for row in range(1, 9):
+            for col in range(1, 6):
+                room[row][col] = wall
+            for col in range(11, 16):
+                room[row][col] = wall
         room[0][8] = door
         room[9][8] = locked_door
+        room[4][8] = boss
     else:
         room[0][8] = door
         room[9][8] = locked_door
@@ -285,7 +292,7 @@ def validate_action(character, action, room, stage_level):
     destination = room[character_new_location[0]][character_new_location[1]]
     if destination == ".  ":
         return character_new_location
-    elif destination in ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]:
+    elif destination in ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 ", "💀 "]:
         if fight_enemy(destination, character, stage_level):
             if not open_reward(character):
                 room[character_new_location[0]][character_new_location[1]] = "🎁 "
@@ -416,12 +423,12 @@ def fight_enemy(enemy, character, stage_level):
     enemies = {
         "🐜 ": {
             "name": "Tunnel Ant",
-            "HP": 3 * stage_level,
+            "HP": 4 * stage_level,
             "atk_mod": round(0.8 * stage_level, 1)
         },
         "🦇 ": {
             "name": "Cave Bat",
-            "HP": 4 * stage_level,
+            "HP": 5 * stage_level,
             "atk_mod": round(1.0 * stage_level, 1)
         },
         "🦖 ": {
@@ -446,18 +453,23 @@ def fight_enemy(enemy, character, stage_level):
         },
         "🦂 ": {
             "name": "Scorpion Prince",
-            "HP": 3 * stage_level,
+            "HP": 4 * stage_level,
             "atk_mod": round(1.1 * stage_level, 1)
         },
         "🐌 ": {
-            "name": "Doom-slug",
-            "HP": 12 * stage_level,
-            "atk_mod": round(0.3 * stage_level, 1)
+            "name": "Doom Slug",
+            "HP": 10 * stage_level,
+            "atk_mod": round(0.5 * stage_level, 1)
         },
         "🦟 ": {
             "name": "Giant Mosquito",
             "HP": 5 * stage_level,
             "atk_mod": round(1.0 * stage_level, 1)
+        },
+        "💀 ": {
+            "name": "Dungeon Boss",
+            "HP": 50,
+            "atk_mod": 5
         }
     }
     user_input = input(f"\033[93mFight \033[91m\033[1m{enemies[enemy]["name"]}\033[0m"
@@ -470,7 +482,7 @@ def fight_enemy(enemy, character, stage_level):
             time.sleep(1)
             character_damage = 1
             for stat in character["class"]["main_stats"]:
-                character_damage += round(character["stats"][stat.lower()] * random.random())
+                character_damage += round(character["stats"][stat.lower()] * random.random() * 0.5)
             if character["stats"]["luc"] * 3 + 25 > random.randint(1, 100):
                 enemies[enemy]["HP"] -= round(character_damage * 1.5)
                 print("\033[94m\033[1mCRITICAL HIT!\033[0m")
@@ -493,7 +505,7 @@ def fight_enemy(enemy, character, stage_level):
                 if character["stats"]["dex"] * 2 + 25 > random.randint(1, 100):
                     print("\033[95mYou dodged the enemy's attack!\033[0m\n")
                 else:
-                    received_damage = max(1, round(enemy_damage - random.random() * character["stats"]["str"]))
+                    received_damage = max(1, round(enemy_damage - random.random() * character["stats"]["str"] * 0.5))
                     print(f"{enemies[enemy]["name"]} attacked you dealing "
                           f"\033[91m\033[1m{received_damage} damage!\n")
                     character["HP"] -= received_damage
@@ -513,7 +525,7 @@ def room_cleared(room) -> bool:
     room_is_clear = True
     for row in room:
         for col in row:
-            if col in ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]:
+            if col in ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 ", "💀 "]:
                 room_is_clear = False
     return room_is_clear
 
@@ -560,7 +572,16 @@ def game():
                         current_character["coordinates"] = user_action
                     elif user_action == "clear":
                         if current_stage == 4:
-                            print("\033[1m\033[97m\t\nThanks for playing!\033[0m\n")
+                            print("\033[1m\033[93m\n\tDungeon Cleared\033[0m\n")
+                            user_restart = input(
+                                "\033[97mEnter R to play again, any other key to quit.\033[0m\n > ").strip().lower()
+                            if user_restart == "r":
+                                restart = True
+                                restart_counter += 1
+                                break
+                            else:
+                                print("\033[1m\033[97m\n\tThanks for playing!\033[0m\n")
+                                return
                         else:
                             current_stage = next(stage)
                             break
