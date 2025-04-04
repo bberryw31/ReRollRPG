@@ -355,7 +355,7 @@ def water_generator(zone, room):
     :param zone: a list of tuples representing a specific area of the room where water tiles may appear
     :param room: a list representing the current map
     :precondition: zone must be a list of tuples representing coordinates of room
-    :precondition: room must be a list of lists representing a 17x10 map
+    :precondition: room must be a list of lists representing a 17x10 grid with valid map elements
     :postcondition: a random coordinate within the zone is selected and replaced with a water tile.
     :postcondition: random adjacent coordinates are replaced with water tiles.
     """
@@ -370,6 +370,18 @@ def water_generator(zone, room):
 
 
 def display_map(room, character):
+    """
+    Display the game map with the player's current position and character info.
+
+    :param room: a list of lists representing the current game map
+    :param character: a dictionary representing the player's character
+    :precondition: room must be a list of lists representing a 17x10 grid with valid map elements
+    :precondition: character must be a dictionary with keys 'coordinates', 'class', 'HP', 'max_HP', 'roll', and 'stats'
+    :precondition: character['coordinates'] must be a tuple of two integers within the map boundaries
+    :postcondition: print a visual representation of the character's current HP and max HP
+    :postcondition: print the character's re-roll count and stats
+    :postcondition: print a visual representation of the current map and the character's current location
+    """
     temp_room = copy.deepcopy(room)
     row, col = character["coordinates"]
     temp_room[row][col] = character["class"]["icon"]
