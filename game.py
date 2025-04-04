@@ -1,3 +1,8 @@
+"""
+COMP 1510 Term Project: ReRollRPG
+Jimmy Cho
+A01450217
+"""
 import time
 
 import random
