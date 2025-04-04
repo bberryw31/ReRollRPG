@@ -612,6 +612,7 @@ def open_reward(character: dict) -> bool:
             else:
                 print("Invalid input.")
 
+
 def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
     """
     Process combat between the player and an enemy.
