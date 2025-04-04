@@ -276,6 +276,19 @@ def select_character(class_pool, restart_count):
 
 
 def generate_map(level):
+    """
+    Generate a map layout for the given game stage level.
+
+    :param level: a non-negative integer representing the current stage of the game
+    :precondition: level must be a non-negative integer
+    :postcondition: generate a 10x17 grid representing the map
+    :postcondition: include different elements depending on the level
+    :postcondition: place enemies and rewards randomly within certain area of the map
+    :postcondition: place water tiles randomly within the map
+    :postcondition: modify the map into a boss room on level 4
+    :postcondition: generate a list of lists containing map elements
+    :return: a list of lists representing the map layout
+    """
     wall = random.choice(["🟨 ", "🟧 ", "🔳 ", "🔲 ", "⬜️ ", "🟦 "])
     empty = ".  "
     door = "🚪 "
