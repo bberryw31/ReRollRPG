@@ -730,6 +730,14 @@ def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
 
 
 def room_cleared(room: list) -> bool:
+    """
+    Check whether all enemies in the room have been defeated.
+
+    :param room: a list of lists representing the current game map
+    :precondition: room must be a list of lists representing a 17x10 grid with valid map elements
+    :postcondition: check all tiles in the room for the presence of enemies
+    :return: True if no enemies are left in the room, False otherwise
+    """
     room_is_clear = True
     for row in room:
         for col in row:
