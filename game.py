@@ -77,9 +77,9 @@ def game_intro():
     """
     Display the game intro screen and wait for the user to start the game.
 
-    :precondition: user's input must be standard input
-    :postcondition: display welcome message and loading animation if the user enters 'start' or 's'
-    :postcondition: display random error messages for invalid inputs
+    :precondition: user's input must be provided through standard input
+    :postcondition: print welcome message and loading animation if the user enters 'start' or 's'
+    :postcondition: print a random error message and repeat prompt for invalid input
     :return: True when a valid input is received to start the game
     """
     clear_screen(0)
@@ -226,7 +226,7 @@ def select_character(class_pool, restart_count):
     :postcondition: prompt the user to confirm or re-roll character
     :postcondition: return the generated character if the user confirms
     :postcondition: generate and display a new random character if user re-rolls
-    :postcondition: display an error message if user input is invalid
+    :postcondition: print error message and repeat prompt for invalid input
     :return: a dictionary representing a character
     """
     roll_count = 0
@@ -398,6 +398,15 @@ def display_map(room, character):
 
 
 def get_user_action():
+    """
+    Prompt the player for an action and return the movement direction or other decisions.
+
+    :precondition: user input must be provided through standard input
+    :postcondition: return a tuple representing the desired movement,
+    :postcondition: reprompt the user if entered 'q'
+    :postcondition: print error message and repeat prompt for invalid input
+    :return: a tuple representing movement direction or 'quit'
+    """
     while True:
         user_input = input(
             "\033[2mEnter your choice of action.\033[0m\n > "
