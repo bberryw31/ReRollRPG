@@ -54,11 +54,11 @@ def clear_screen(stage: int):
        |:|  |        \:\__\        |:|  |        \::/  /       \:\__\    \:\__\
         \|__|         \/__/         \|__|         \/__/         \/__/     \/__/"""
     logo_rr = r"""
- ________ ________ ________ ________ _________
- ___  __ \___  __ \___  __ \___  __ \__  ____/
- __  /_/ /__  /_/ /__  /_/ /__  /_/ /_  / __
- _  _, _/ _  _, _/ _  _, _/ _  ____/ / /_/ /
- /_/ |_|  /_/ |_|  /_/ |_|  /_/      \____/
+   ________ ________ ________ ________ _________
+   ___  __ \___  __ \___  __ \___  __ \__  ____/
+   __  /_/ /__  /_/ /__  /_/ /__  /_/ /_  / __
+   _  _, _/ _  _, _/ _  _, _/ _  ____/ / /_/ /
+   /_/ |_|  /_/ |_|  /_/ |_|  /_/      \____/
 
 
 
@@ -222,6 +222,7 @@ def select_character(class_pool: list[str], restart_count: int) -> dict:
 
     :param class_pool: a list of available classes as strings
     :param restart_count: an integer representing the number of game restarts
+    :precondition: user's input must be provided through standard input
     :precondition: class_pool must be a non-empty list
     :precondition: class_pool must be a homogenous list of strings
     :precondition: restart_count must be an integer
@@ -237,7 +238,7 @@ def select_character(class_pool: list[str], restart_count: int) -> dict:
     roll_count = 0
     while True:
         clear_screen(1)
-        print("\033[1mSelect a character!\n")
+        print("\033[1m   Select a character!\n")
         if restart_count == 2:
             class_pool.append("Jimmy")
             print("\t\033[2mUnlocked Class: "
@@ -406,7 +407,7 @@ def get_user_action() -> str | tuple[int, int]:
     """
     Prompt the player for an action and return the movement direction or other decisions.
 
-    :precondition: user input must be provided through standard input
+    :precondition: user's input must be provided through standard input
     :postcondition: return a tuple representing the desired movement
     :postcondition: reprompt the user to confirm if entered 'q'
     :postcondition: print error message and repeat prompt for invalid input
@@ -501,6 +502,7 @@ def drink_water(character: dict):
     Prompt the player to drink water and apply a random outcome based on chance.
 
     :param character: a dictionary representing the character
+    :precondition: user's input must be provided through standard input
     :precondition: character must be a dictionary with keys 'HP', 'max_HP', and 'stats'
     :precondition: character['HP'] and character['max_HP'] must be integers
     :precondition: character['stats'] must be a dictionary with keys 'str', 'dex', 'int', and 'luc'
@@ -536,6 +538,7 @@ def open_reward(character: dict) -> bool:
     Prompt the player to open a reward and apply a chosen effect.
 
     :param character: a dictionary representing the character
+    :precondition: user's input must be provided through standard input
     :precondition: character must contain keys 'HP', 'max_HP', 'roll', and 'stats'
     :precondition: character['stats'] must be a dictionary with keys 'str', 'dex', 'int', and 'luc'
     :precondition: character['roll'] must be a non-negative integer
@@ -583,7 +586,7 @@ def open_reward(character: dict) -> bool:
         return f"\033[1mGain \033[96m-2 ~ +3\033[0m\033[1m random stat\033[0m", apply
 
     user_decision = input(
-        "\033[93mClaim Reward? \nEnter \'Y\' to confirm.\033[0m\n > "
+        "\033[93mClaim\033[0m \033[96mReward?\033[0m \n\033[93mEnter \'Y\' to confirm.\033[0m\n > "
     ).strip().lower()
     if user_decision != "y":
         return False
@@ -625,6 +628,7 @@ def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
     :param enemy: a string representing the enemy
     :param character: a dictionary representing the character
     :param stage_level: a non-negative integer representing the current stage of the game
+    :precondition: user's input must be provided through standard input
     :precondition: enemy must be a key in the enemies dictionary
     :precondition: character must contain keys 'HP', 'class', 'stats', and 'roll'
     :precondition: character['class'] must contain 'icon' and 'main_stats'
@@ -712,7 +716,7 @@ def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
             if character["stats"]["int"] + 10 > random.randint(1, 100):
                 character["roll"] += 1
-                print("\033[95m\033[2mYou gained inspiration from combat!\033[0m 🎲 \033[93m\033[1m+1\033[0m\n")
+                print("\033[34m\033[2mYou gained inspiration from combat!\033[0m 🎲 \033[93m\033[1m+1\033[0m\n")
             time.sleep(1)
             if enemies[enemy]["HP"] > 0:
                 enemy_damage = (1 + random.random()) * enemies[enemy]["atk_mod"]
@@ -725,11 +729,11 @@ def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
                     character["HP"] -= received_damage
                     print(f" {character["class"]["icon"]} " + "\033[91m❤︎\033[0m" * character["HP"] + "\n")
                 if character["stats"]["int"] + 10 > random.randint(1, 100):
-                    print("\033[95m\033[2mYou gained inspiration from combat!\033[0m 🎲 \033[93m\033[1m+1\033[0m\n")
+                    print("\033[34m\033[2mYou gained inspiration from combat!\033[0m 🎲 \033[93m\033[1m+1\033[0m\n")
         if character["HP"] <= 0:
             return False
         else:
-            print(f"\033[99mYou defeated {enemies[enemy]["name"]}!")
+            print(f"\033[96mYou defeated\033[0m \033[91m\033[1m{enemies[enemy]["name"]}\033[0m\033[96m!\033[0m")
             return True
     else:
         return False
@@ -799,14 +803,14 @@ def game():
                         current_character["coordinates"] = user_action
                     elif user_action == "clear":
                         if current_stage == 4:
-                            print("\033[1m\033[93m\n\tDungeon Cleared\033[0m\n")
+                            print("\033[1m\033[95m\n\tDungeon Cleared\033[0m\n")
                             user_restart = input(
                                 "\033[93mEnter \'R\' to play again, any other key to quit.\033[0m\n > "
                             ).strip().lower()
                             if user_restart == "r":
                                 restart = True
                                 restart_counter += 1
-                                break
+                                dead = True
                             else:
                                 print("\033[1m\033[97m\n\tThanks for playing!\033[0m\n")
                                 return
@@ -819,4 +823,3 @@ def game():
 
 if __name__ == "__main__":
     game()
-
