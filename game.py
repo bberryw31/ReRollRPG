@@ -353,7 +353,7 @@ def water_generator(zone, room):
     Place water tiles randomly within a specific area of the room.
 
     :param zone: a list of tuples representing a specific area of the room where water tiles may appear
-    :param room: a list representing the current map
+    :param room: a list of lists representing the current map
     :precondition: zone must be a list of tuples representing coordinates of room
     :precondition: room must be a list of lists representing a 17x10 grid with valid map elements
     :postcondition: a random coordinate within the zone is selected and replaced with a water tile.
@@ -374,7 +374,7 @@ def display_map(room, character):
     Display the game map with the player's current position and character info.
 
     :param room: a list of lists representing the current game map
-    :param character: a dictionary representing the player's character
+    :param character: a dictionary representing the character
     :precondition: room must be a list of lists representing a 17x10 grid with valid map elements
     :precondition: character must be a dictionary with keys 'coordinates', 'class', 'HP', 'max_HP', 'roll', and 'stats'
     :precondition: character['coordinates'] must be a tuple of two integers within the map boundaries
@@ -402,8 +402,8 @@ def get_user_action():
     Prompt the player for an action and return the movement direction or other decisions.
 
     :precondition: user input must be provided through standard input
-    :postcondition: return a tuple representing the desired movement,
-    :postcondition: reprompt the user if entered 'q'
+    :postcondition: return a tuple representing the desired movement
+    :postcondition: reprompt the user to confirm if entered 'q'
     :postcondition: print error message and repeat prompt for invalid input
     :return: a tuple representing movement direction or 'quit'
     """
@@ -432,6 +432,21 @@ def get_user_action():
 
 
 def validate_action(character, action, room, stage_level):
+    """
+    Validate the player's action and determine and perform the result.
+
+    :param character: a dictionary representing the character
+    :param action: a tuple representing movement direction, or a string for special command
+    :param room: a list of lists representing the current map
+    :param stage_level: a non-negative integer indicating the current game stage
+    :precondition: character must be a dictionary with keys 'coordinates', 'class', 'HP', 'max_HP', 'roll', and 'stats'
+    :precondition: action must be a tuple of two integers or a string
+    :precondition: room must be a list of lists representing a 17x10 grid with valid map elements
+    :precondition: stage_level must be a non-negative integer
+    :postcondition: perform an action based on the destination tile
+    :postcondition: update character state and room state according to the result of the action
+    :return: new coordinates as a tuple, a status string, or a string message regarding the validity of action
+    """
     if action == "r":
         return "r"
     elif action == "q":
