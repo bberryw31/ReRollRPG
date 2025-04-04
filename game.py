@@ -526,6 +526,19 @@ def drink_water(character):
 
 
 def open_reward(character):
+    """
+    Prompt the player to open a reward and apply a chosen effect.
+
+    :param character: a dictionary representing the character
+    :precondition: character must contain keys 'HP', 'max_HP', 'roll', and 'stats'
+    :precondition: character['stats'] must be a dictionary with keys 'str', 'dex', 'int', and 'luc'
+    :precondition: character['roll'] must be a non-negative integer
+    :postcondition: display two random reward options and prompt the player for selection
+    :postcondition: allow re-rolling of the options if character has available re-rolls
+    :postcondition: apply the selected option to the character
+    :return: True if reward is claimed, False if the player does not open the reward
+    """
+
     def reward_hp():
         heal = round(random.uniform(0.1, 0.5) * character["max_HP"] + 0.5)
 
