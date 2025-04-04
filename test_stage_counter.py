@@ -1,9 +1,9 @@
-import unittest
+from unittest import TestCase
 
 from game import stage_counter
 
 
-class TestStageCounter(unittest.TestCase):
+class TestStageCounter(TestCase):
 
     def test_stage_counter_start_from_zero(self):
         counter = stage_counter(0)
