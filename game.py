@@ -281,7 +281,7 @@ def generate_map(level):
 
     :param level: a non-negative integer representing the current stage of the game
     :precondition: level must be a non-negative integer
-    :postcondition: generate a 10x17 grid representing the map
+    :postcondition: generate a 17x10 grid representing the map
     :postcondition: include different elements depending on the level
     :postcondition: place enemies and rewards randomly within certain area of the map
     :postcondition: place water tiles randomly within the map
@@ -349,6 +349,16 @@ def generate_map(level):
 
 
 def water_generator(zone, room):
+    """
+    Place water tiles randomly within a specific area of the room.
+
+    :param zone: a list of tuples representing a specific area of the room where water tiles may appear
+    :param room: a list representing the current map
+    :precondition: zone must be a list of tuples representing coordinates of room
+    :precondition: room must be a list of lists representing a 17x10 map
+    :postcondition: a random coordinate within the zone is selected and replaced with a water tile.
+    :postcondition: random adjacent coordinates are replaced with water tiles.
+    """
     water_row, water_col = random.choice(zone)
     water_row_range = range(water_row - 1, water_row + 2)
     water_col_range = range(water_col - 1, water_col + 2)
