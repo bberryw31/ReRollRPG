@@ -491,6 +491,17 @@ def validate_action(character, action, room, stage_level):
 
 
 def drink_water(character):
+    """
+    Prompt the player to drink water and apply a random outcome based on chance.
+
+    :param character: a dictionary representing the character
+    :precondition: character must be a dictionary with keys 'HP', 'max_HP', and 'stats'
+    :precondition: character['HP'] and character['max_HP'] must be integers
+    :precondition: character['stats'] must be a dictionary with keys 'str', 'dex', 'int', and 'luc'
+    :postcondition: prompt the player to choose whether to drink the water
+    :postcondition: if confirmed, apply a random outcome (stat increase, HP heal, or HP damage)
+    :postcondition: update character’s stats or HP accordingly
+    """
     user_decision = input("\033[91m\033[2mWater does not seem so clean... \033[0m\n"
                           "\033[93mDrink water? \nEnter \'Y\' to confirm.\n"
                           "\033[0m > ").strip().lower()
