@@ -5,7 +5,7 @@ import random
 import copy
 
 
-def stage_counter(stage):
+def stage_counter(stage: int):
     """
     Return the current stage number starting from the given value.
 
@@ -25,7 +25,7 @@ def stage_counter(stage):
         stage += 1
 
 
-def clear_screen(stage):
+def clear_screen(stage: int):
     """
     Clear the terminal screen and display the game logo based on the current stage.
 
@@ -73,9 +73,9 @@ def clear_screen(stage):
         print(logo_re_roll_color, logo_rr, "\033[0m")
 
 
-def game_intro():
+def game_intro() -> bool:
     """
-    Display the game intro screen and wait for the user to start the game.
+    Display the game intro screen and prompt the user to start the game.
 
     :precondition: user's input must be provided through standard input
     :postcondition: print welcome message and loading animation if the user enters 'start' or 's'
@@ -114,7 +114,7 @@ def game_intro():
             print(random.choice(response))
 
 
-def random_character(class_pool):
+def random_character(class_pool: list[str]) -> dict:
     """
     Generate a random character with randomized stats, HP, and class.
 
@@ -211,7 +211,7 @@ def random_character(class_pool):
     return character
 
 
-def select_character(class_pool, restart_count):
+def select_character(class_pool: list[str], restart_count: int) -> dict:
     """
     Prompt the user to confirm or re-roll the generated character
 
@@ -275,7 +275,7 @@ def select_character(class_pool, restart_count):
                 print("Invalid input.")
 
 
-def generate_map(level):
+def generate_map(level: int) -> list[list[str]]:
     """
     Generate a map layout for the given game stage level.
 
@@ -348,7 +348,7 @@ def generate_map(level):
     return room
 
 
-def water_generator(zone, room):
+def water_generator(zone: list[tuple[int, int]], room: list[list[str]]):
     """
     Place water tiles randomly within a specific area of the room.
 
@@ -369,7 +369,7 @@ def water_generator(zone, room):
     room[water_row][water_col] = "🌀 "
 
 
-def display_map(room, character):
+def display_map(room: list[list[str]], character: dict):
     """
     Display the game map with the player's current position and character info.
 
@@ -397,7 +397,7 @@ def display_map(room, character):
     print(map_print)
 
 
-def get_user_action():
+def get_user_action() -> str | tuple[int, int]:
     """
     Prompt the player for an action and return the movement direction or other decisions.
 
@@ -431,7 +431,8 @@ def get_user_action():
             print("Invalid input.")
 
 
-def validate_action(character, action, room, stage_level):
+def validate_action(character: dict, action: tuple[int, int] | str, room: list[list[str]], stage_level: int) \
+        -> tuple[int, int] | str:
     """
     Validate the player's action and determine and perform the result.
 
@@ -490,7 +491,7 @@ def validate_action(character, action, room, stage_level):
         return "\033[91mSomething is blocking your way...\033[0m"
 
 
-def drink_water(character):
+def drink_water(character: dict):
     """
     Prompt the player to drink water and apply a random outcome based on chance.
 
@@ -525,7 +526,7 @@ def drink_water(character):
         time.sleep(2)
 
 
-def open_reward(character):
+def open_reward(character: dict) -> bool:
     """
     Prompt the player to open a reward and apply a chosen effect.
 
@@ -539,7 +540,7 @@ def open_reward(character):
     :return: True if reward is claimed, False if the player does not open the reward
     """
 
-    def reward_hp():
+    def reward_hp() -> tuple:
         heal = round(random.uniform(0.1, 0.5) * character["max_HP"] + 0.5)
 
         def apply():
@@ -547,7 +548,7 @@ def open_reward(character):
 
         return f"\033[1mHeal \033[96m{heal}\033[0m \033[1mHP\033[0m", apply
 
-    def reward_max_hp():
+    def reward_max_hp() -> tuple:
         increase = random.choice([1, 2])
 
         def apply():
@@ -556,7 +557,7 @@ def open_reward(character):
 
         return f"\033[1mGain \033[96m{increase}\033[0m \033[1mMax HP\033[0m", apply
 
-    def reward_stat():
+    def reward_stat() -> tuple:
         stat = random.choice(["str", "dex", "int", "luc"])
         increase = random.choice([1, 2])
 
@@ -565,7 +566,7 @@ def open_reward(character):
 
         return f"\033[1mGain \033[96m{increase} \033[0m\033[1m{stat.upper()}\033[0m", apply
 
-    def reward_random_stat():
+    def reward_random_stat() -> tuple:
         stat = random.choice(["str", "dex", "int", "luc"])
         increase = random.randint(-2, 3)
 
@@ -611,7 +612,22 @@ def open_reward(character):
             else:
                 print("Invalid input.")
 
-def fight_enemy(enemy, character, stage_level):
+def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
+    """
+    Process combat between the player and an enemy.
+
+    :param enemy: a string representing the enemy
+    :param character: a dictionary representing the character
+    :param stage_level: a non-negative integer representing the current stage of the game
+    :precondition: enemy must be a key in the enemies dictionary
+    :precondition: character must contain keys 'HP', 'class', 'stats', and 'roll'
+    :precondition: character['class'] must contain 'icon' and 'main_stats'
+    :precondition: character['stats'] must contain keys 'str', 'dex', 'int', 'luc'
+    :postcondition: simulate a turn-based combat with the enemy
+    :postcondition: modify the character’s HP and re-roll count when triggered
+    :postcondition: print combat messages, outcomes of each attack, and visual representation of change in HP
+    :return: True if the enemy is defeated, False if the player dies or declines the fight
+    """
     enemies = {
         "🐜 ": {
             "name": "Tunnel Ant",
@@ -713,7 +729,7 @@ def fight_enemy(enemy, character, stage_level):
         return False
 
 
-def room_cleared(room) -> bool:
+def room_cleared(room: list) -> bool:
     room_is_clear = True
     for row in room:
         for col in row:
