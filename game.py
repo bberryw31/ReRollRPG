@@ -88,11 +88,21 @@ def game_intro() -> bool:
     :return: True when a valid input is received to start the game
     """
     clear_screen(0)
-    print("\n\033[92m                            🎲 Welcome to ReRollRPG 🎲\033[0m")
-    print("\n\033[2m\tEnter \'S\' or 'Start' to begin your adventure.\033[0m")
+    print("""\033[3m
+                       While casually gardening your backyard,
+                you tripped over a zucchini and fell into a dungeon.
+                           It\'s dangerous! It\'s mysterious!
+                         Everything bends around your choices
+                          almost like fate’s on a dice roll.
+                       Re-roll your stats, re-roll your class,
+                             and re-roll your destiny!
+\033[0m
+""")
+    print("\n\033[92m\033[1m                            🎲 Welcome to ReRollRPG 🎲\033[0m\n")
+    print("\n\033[93mEnter \'s\' or 'start' to begin your adventure.\033[0m")
     error_counter = 0
     while True:
-        user_input = input("\n > ").strip().lower()
+        user_input = input(" > ").strip().lower()
         if user_input == "start" or user_input == "s":
             start_counter = 1
             while start_counter < 5:
@@ -104,17 +114,17 @@ def game_intro() -> bool:
         else:
             if error_counter < 3:
                 response = [
-                    "Invalid input. Type 'start' to begin.",
-                    "Unknown command. Type 'start' to begin."
+                    "\033[2mInvalid input. \033[0m\033[93mEnter \'s\' or \'start\' to begin.\033[0m",
+                    "\033[2mUnknown command. \033[0m\033[93mEnter \'s\' or \'start\' to begin.\033[0m"
                 ]
                 error_counter += 1
             else:
                 response = [
-                    "Excuse me? Type 'start' to begin.",
-                    "Stop playing with me. Type 'start' to begin.",
-                    "Lord have mercy.. Type 'start' to begin.",
-                    "Are you kidding me? Type 'start' to begin.",
-                    "I'm about to lose it. Type 'start' to begin.",
+                    "\033[2mExcuse me?\033[0m\033[93m Enter \'s\' or \'start\' to begin.\033[0m",
+                    "\033[2mStop playing with me.\033[0m\033[93m Enter \'s\' or \'start\' to begin.\033[0m",
+                    "\033[2mLord have mercy..\033[0m\033[93m Enter \'s\' or \'start\' to begin.\033[0m",
+                    "\033[2mAre you kidding me?\033[0m\033[93m Enter \'s\' or \'start\' to begin.\033[0m",
+                    "\033[2mI'm about to lose it.\033[0m\033[93m Enter \'s\' or \'start\' to begin.\033[0m",
                 ]
             print(random.choice(response))
 
@@ -586,7 +596,7 @@ def open_reward(character: dict) -> bool:
         return f"\033[1mGain \033[96m-2 ~ +3\033[0m\033[1m random stat\033[0m", apply
 
     user_decision = input(
-        "\033[93mClaim\033[0m \033[96mReward?\033[0m \n\033[93mEnter \'Y\' to confirm.\033[0m\n > "
+        "\033[93mClaim\033[0m \033[96mReward\033[0m\033[93m?\nEnter \'Y\' to confirm.\033[0m\n > "
     ).strip().lower()
     if user_decision != "y":
         return False
@@ -690,8 +700,8 @@ def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
             "atk_mod": 5
         }
     }
-    user_input = input(f"\033[93mFight \033[91m\033[1m{enemies[enemy]["name"]}\033[0m"
-                       f"\033[93m? \nEnter \'Y\' to confirm.\033[0m\n > ")
+    user_input = input(f"Fight \033[91m\033[1m{enemies[enemy]["name"]}\033[0m?"
+                       f"\n\033[93mEnter \'Y\' to confirm.\033[0m\n > ")
     if user_input.strip().lower() == "y":
         print("\n\033[91m\033[1mYou are in combat!\033[0m\n")
         print(f" {character["class"]["icon"]} " + "\033[91m❤︎\033[0m" * character["HP"] + "\n")
@@ -733,7 +743,7 @@ def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
         if character["HP"] <= 0:
             return False
         else:
-            print(f"\033[96mYou defeated\033[0m \033[91m\033[1m{enemies[enemy]["name"]}\033[0m\033[96m!\033[0m")
+            print(f"You defeated \033[91m\033[1m{enemies[enemy]["name"]}\033[0m!")
             return True
     else:
         return False
@@ -803,7 +813,9 @@ def game():
                         current_character["coordinates"] = user_action
                     elif user_action == "clear":
                         if current_stage == 4:
-                            print("\033[1m\033[95m\n\tDungeon Cleared\033[0m\n")
+                            print("\033[1m\033[95m\n\t\tDungeon Cleared\033[0m\n")
+                            print("\033[2m\033[3m\tYour memory in the dungeon has been wiped,\n"
+                                  "and you\'ve been teleported to back to the entrance.\033[0m\n")
                             user_restart = input(
                                 "\033[93mEnter \'R\' to play again, any other key to quit.\033[0m\n > "
                             ).strip().lower()
