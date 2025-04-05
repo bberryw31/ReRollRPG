@@ -381,7 +381,7 @@ def display_map(room: list[list[str]], character: dict, stage: int):
     :precondition: character must be a dictionary with keys 'coordinates', 'class', 'HP', 'max_HP', 'roll', and 'stats'
     :precondition: character['coordinates'] must be a tuple of two integers within the map boundaries
     :precondition: stage must be a non-negative integer
-    :postcondition: print the stage level of the room
+    :postcondition: print the stage level or description of the current room
     :postcondition: print a visual representation of the character's current HP and max HP
     :postcondition: print the character's re-roll count and stats
     :postcondition: print a visual representation of the current map and the character's current location
@@ -399,11 +399,15 @@ def display_map(room: list[list[str]], character: dict, stage: int):
                   STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
                   INT \033[32m{character["stats"]["int"]}\033[0m LUC \033[32m{character["stats"]["luc"]}\033[0m"""
     if stage == 0:
-        print("\033[94mStarting Room\033[0m")
+        print("\033[94m\033[1m 🌑 Starting Room\033[0m")
+    elif stage == 1:
+        print("\033[94m\033[1m 🌘 Dungeon Stage \033[95m1️⃣\033[0m")
+    elif stage == 2:
+        print("\033[94m\033[1m 🌗 Dungeon Stage \033[95m2️⃣\033[0m")
+    elif stage == 3:
+        print("\033[94m\033[1m 🌖 Dungeon Stage \033[95m3️⃣\033[0m")
     elif stage == 4:
-        print("\033[91mDungeon Boss Room\033[0m")
-    else:
-        print(f"\033[94mDungeon Stage \033[1m\033[95m{stage}\033[0m")
+        print("\033[91m\033[1m 🌕 Dungeon Boss Room\033[0m")
     print(map_print)
 
 
