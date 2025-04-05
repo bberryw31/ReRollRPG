@@ -330,6 +330,8 @@ def generate_map(level: int) -> list[list[str]]:
         room[0][8] = door
         room[9][8] = locked_door
         room[4][8] = boss
+        room[8][6] = reward
+        room[8][10] = reward
     else:
         room[0][8] = door
         room[9][8] = locked_door
