@@ -65,7 +65,8 @@ def game_intro() -> bool:
     Display the game intro screen and prompt the user to start the game.
 
     :precondition: user's input must be provided through standard input
-    :postcondition: print welcome message and loading animation if the user enters 'start' or 's'
+    :postcondition: print game logo, storyline of the game, and welcome message
+    :postcondition: print loading animation if the user enters 'start' or 's'
     :postcondition: print a random error message and repeat prompt for invalid input
     :return: True when a valid input is received to start the game
     """
