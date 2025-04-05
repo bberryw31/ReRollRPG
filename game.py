@@ -370,15 +370,18 @@ def water_generator(zone: list[tuple[int, int]], room: list[list[str]]):
     room[water_row][water_col] = "🌀 "
 
 
-def display_map(room: list[list[str]], character: dict):
+def display_map(room: list[list[str]], character: dict, stage: int):
     """
     Display the game map with the player's current position and character info.
 
     :param room: a list of lists representing the current game map
     :param character: a dictionary representing the character
+    :param stage: an integer representing the current stage level
     :precondition: room must be a list of lists representing a 17x10 grid with valid map elements
     :precondition: character must be a dictionary with keys 'coordinates', 'class', 'HP', 'max_HP', 'roll', and 'stats'
     :precondition: character['coordinates'] must be a tuple of two integers within the map boundaries
+    :precondition: stage must be a non-negative integer
+    :postcondition: print the stage level of the room
     :postcondition: print a visual representation of the character's current HP and max HP
     :postcondition: print the character's re-roll count and stats
     :postcondition: print a visual representation of the current map and the character's current location
@@ -395,7 +398,14 @@ def display_map(room: list[list[str]], character: dict):
                      🎲 \033[91m{character["roll"]}\033[0m
                   STR \033[32m{character["stats"]["str"]}\033[0m DEX \033[32m{character["stats"]["dex"]}\033[0m
                   INT \033[32m{character["stats"]["int"]}\033[0m LUC \033[32m{character["stats"]["luc"]}\033[0m"""
+    if stage == 0:
+        print("\033[94mStarting Room\033[0m")
+    elif stage == 4:
+        print("\033[91mDungeon Boss Room\033[0m")
+    else:
+        print(f"\033[94mDungeon Stage \033[1m\033[95m{stage}\033[0m")
     print(map_print)
+
 
 
 def get_user_action() -> str | tuple[int, int]:
@@ -772,7 +782,7 @@ def game():
                 current_map = generate_map(current_stage)
                 clear_screen(1)
                 while not dead:
-                    display_map(current_map, current_character)
+                    display_map(current_map, current_character, current_stage)
                     user_action = validate_action(current_character, get_user_action(), current_map, current_stage)
                     clear_screen(1)
                     if user_action == "q":
