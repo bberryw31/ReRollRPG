@@ -788,7 +788,7 @@ def game():
                                 restart_counter += 1
                                 break
                             elif user_restart == "q":
-                                print("\033[1m\033[97m\t\nThanks for playing!\033[0m\n")
+                                print("\033[1m\033[97m\t\t\nThanks for playing!\033[0m\n")
                                 return
                             else:
                                 print("Invalid input.")
@@ -797,7 +797,7 @@ def game():
                     elif user_action == "clear":
                         if current_stage == 4:
                             print("\033[1m\033[95m\n\t\tDungeon Cleared\033[0m\n")
-                            print("\033[2m\033[3m\tYour memory in the dungeon has been wiped,\n"
+                            print("\033[2m\033[3m    Your memory in the dungeon has been wiped,\n"
                                   "and you\'ve been teleported to back to the entrance.\033[0m\n")
                             user_restart = input(
                                 "\033[93mEnter \'R\' to play again, any other key to quit.\033[0m\n > "
@@ -807,7 +807,7 @@ def game():
                                 restart_counter += 1
                                 dead = True
                             else:
-                                print("\033[1m\033[97m\n\tThanks for playing!\033[0m\n")
+                                print("\033[1m\033[97m\n\t\tThanks for playing!\033[0m\n")
                                 return
                         else:
                             current_stage = next(stage)
