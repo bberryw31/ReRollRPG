@@ -9,25 +9,7 @@ import random
 
 import copy
 
-
-def stage_counter(stage: int):
-    """
-    Return the current stage number starting from the given value.
-
-    :param stage: an integer representing the first stage number
-    :precondition: stage must be a non-negative integer
-    :postcondition: generate the current stage number
-    :return: the next stage number
-
-    >>> counter = stage_counter(0)
-    >>> next(counter)
-    0
-    >>> next(counter)
-    1
-    """
-    while True:
-        yield stage
-        stage += 1
+import itertools
 
 
 def clear_screen(stage: int):
@@ -780,7 +762,7 @@ def game():
         dead = False
         if game_intro():
             current_character = select_character(class_pool, restart_counter)
-            stage = stage_counter(0)
+            stage = itertools.count(start=0)
             current_stage = next(stage)
             while not dead:
                 current_character["coordinates"] = 8, 8
