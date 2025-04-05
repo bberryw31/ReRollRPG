@@ -680,7 +680,7 @@ def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
             "atk_mod": round(1.0 * stage_level, 1)
         },
         "💀 ": {
-            "name": "Dungeon Boss",
+            "name": "Unkillable Demon King",
             "HP": 50,
             "atk_mod": 5
         }
