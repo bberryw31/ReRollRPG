@@ -463,9 +463,7 @@ def validate_action(character: dict, action: tuple[int, int] | str, room: list[l
     :postcondition: update character state and room state according to the result of the action
     :return: new coordinates as a tuple, a status string, or a string message regarding the validity of action
     """
-    if action == "r":
-        return "r"
-    elif action == "q":
+    if action == "q":
         return "q"
     row, col = character["coordinates"]
     character_new_location = (row + action[0], col + action[1])
