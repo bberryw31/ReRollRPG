@@ -111,8 +111,8 @@ class TestGenerateMap(TestCase):
             self.assertIn(reward, reward_spots)
 
     def test_generate_map_stage_1_enemies(self):
-        enemy_zone = ([(row, col) for row in range(3, 6) for col in range(3, 6)] +
-                      [(row, col) for row in range(3, 6) for col in range(11, 14)])
+        enemy_zone = ([(row, col) for row in range(3, 7) for col in range(3, 6)] +
+                      [(row, col) for row in range(3, 7) for col in range(11, 14)])
         room = generate_map(1)
         enemies = ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]
         enemy_spots = [(row, col) for row in range(10) for col in range(17) if room[row][col] in enemies]
@@ -122,8 +122,8 @@ class TestGenerateMap(TestCase):
             self.assertIn(enemy, enemy_zone)
 
     def test_generate_map_stage_2_enemies(self):
-        enemy_zone = ([(row, col) for row in range(3, 6) for col in range(3, 6)] +
-                      [(row, col) for row in range(3, 6) for col in range(11, 14)])
+        enemy_zone = ([(row, col) for row in range(3, 7) for col in range(3, 6)] +
+                      [(row, col) for row in range(3, 7) for col in range(11, 14)])
         room = generate_map(2)
         enemies = ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]
         enemy_spots = [(row, col) for row in range(10) for col in range(17) if room[row][col] in enemies]
@@ -133,8 +133,8 @@ class TestGenerateMap(TestCase):
             self.assertIn(enemy, enemy_zone)
 
     def test_generate_map_stage_3_enemies(self):
-        enemy_zone = ([(row, col) for row in range(3, 6) for col in range(3, 6)] +
-                      [(row, col) for row in range(3, 6) for col in range(11, 14)])
+        enemy_zone = ([(row, col) for row in range(3, 7) for col in range(3, 6)] +
+                      [(row, col) for row in range(3, 7) for col in range(11, 14)])
         room = generate_map(3)
         enemies = ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]
         enemy_spots = [(row, col) for row in range(10) for col in range(17) if room[row][col] in enemies]
@@ -146,8 +146,8 @@ class TestGenerateMap(TestCase):
     def test_generate_map_stage_1_water_in_zone(self):
         room = generate_map(1)
         water_tile = "🌀 "
-        water_zone = ([(row, col) for row in range(2, 7) for col in range(2, 7)] +
-                      [(row, col) for row in range(2, 7) for col in range(10, 15)])
+        water_zone = ([(row, col) for row in range(2, 8) for col in range(2, 7)] +
+                      [(row, col) for row in range(2, 8) for col in range(10, 15)])
         water_spots = [(row, col) for row in range(10) for col in range(17) if room[row][col] == water_tile]
         for water in water_spots:
             self.assertIn(water, water_zone)
@@ -155,8 +155,8 @@ class TestGenerateMap(TestCase):
     def test_generate_map_stage_2_water_in_zone(self):
         room = generate_map(2)
         water_tile = "🌀 "
-        water_zone = ([(row, col) for row in range(2, 7) for col in range(2, 7)] +
-                      [(row, col) for row in range(2, 7) for col in range(10, 15)])
+        water_zone = ([(row, col) for row in range(2, 8) for col in range(2, 7)] +
+                      [(row, col) for row in range(2, 8) for col in range(10, 15)])
         water_spots = [(row, col) for row in range(10) for col in range(17) if room[row][col] == water_tile]
         for water in water_spots:
             self.assertIn(water, water_zone)
@@ -164,8 +164,8 @@ class TestGenerateMap(TestCase):
     def test_generate_map_stage_3_water_in_zone(self):
         room = generate_map(3)
         water_tile = "🌀 "
-        water_zone = ([(row, col) for row in range(2, 7) for col in range(2, 7)] +
-                      [(row, col) for row in range(2, 7) for col in range(10, 15)])
+        water_zone = ([(row, col) for row in range(2, 8) for col in range(2, 7)] +
+                      [(row, col) for row in range(2, 8) for col in range(10, 15)])
         water_spots = [(row, col) for row in range(10) for col in range(17) if room[row][col] == water_tile]
         for water in water_spots:
             self.assertIn(water, water_zone)
