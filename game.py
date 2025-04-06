@@ -296,8 +296,8 @@ def generate_map(level: int) -> list[list[str]]:
     reward_spots = [(1, 1), (1, 15), (8, 1), (8, 15)]
     enemies = ["🐜 ", "🦇 ", "🦖 ", "🐊 ", "🦄 ", "🐍 ", "🦂 ", "🐌 ", "🦟 "]
     boss = "💀 "
-    enemy_zone_left = [(row, col) for row in range(3, 7) for col in range(3, 6)]
-    enemy_zone_right = [(row, col) for row in range(3, 7) for col in range(11, 14)]
+    enemy_zone_left = [(row, col) for row in range(3, 6) for col in range(3, 6)]
+    enemy_zone_right = [(row, col) for row in range(3, 6) for col in range(11, 14)]
     enemy_zone = enemy_zone_left + enemy_zone_right
     room_default = (
             [[wall] * 17] +
