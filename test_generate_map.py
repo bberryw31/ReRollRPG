@@ -1,84 +1,70 @@
 from unittest import TestCase
 
-from unittest.mock import patch
-
 from game import generate_map
 
 
 class TestGenerateMap(TestCase):
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_0_size(self, _):
+    def test_generate_map_stage_0_size(self):
         room = generate_map(0)
         self.assertEqual(len(room), 10)
         for row in room:
             self.assertEqual(len(row), 17)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_1_size(self, _):
+    def test_generate_map_stage_1_size(self):
         room = generate_map(1)
         self.assertEqual(len(room), 10)
         for row in room:
             self.assertEqual(len(row), 17)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_2_size(self, _):
+    def test_generate_map_stage_2_size(self):
         room = generate_map(2)
         self.assertEqual(len(room), 10)
         for row in room:
             self.assertEqual(len(row), 17)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_3_size(self, _):
+    def test_generate_map_stage_3_size(self):
         room = generate_map(3)
         self.assertEqual(len(room), 10)
         for row in room:
             self.assertEqual(len(row), 17)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_4_size(self, _):
+    def test_generate_map_stage_4_size(self):
         room = generate_map(4)
         self.assertEqual(len(room), 10)
         for row in room:
             self.assertEqual(len(row), 17)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_0_door_location(self, _):
+    def test_generate_map_stage_0_door_location(self):
         room = generate_map(0)
         self.assertEqual(room[0][8], "🚪 ")
         self.assertEqual(room[9][8], "🔒 ")
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_1_door_location(self, _):
+    def test_generate_map_stage_1_door_location(self):
         room = generate_map(1)
         self.assertEqual(room[0][8], "🚪 ")
         self.assertEqual(room[9][8], "🔒 ")
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_2_door_location(self, _):
+    def test_generate_map_stage_2_door_location(self):
         room = generate_map(2)
         self.assertEqual(room[0][8], "🚪 ")
         self.assertEqual(room[9][8], "🔒 ")
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_3_door_location(self, _):
+    def test_generate_map_stage_3_door_location(self):
         room = generate_map(3)
         self.assertEqual(room[0][8], "🚪 ")
         self.assertEqual(room[9][8], "🔒 ")
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_4_door_location(self, _):
+    def test_generate_map_stage_4_door_location(self):
         room = generate_map(4)
         self.assertEqual(room[0][8], "🚪 ")
         self.assertEqual(room[9][8], "🔒 ")
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_0_tutorial_reward(self, _):
+    def test_generate_map_stage_0_tutorial_reward(self):
         room = generate_map(0)
         self.assertEqual(room[3][8], "🎁 ")
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_0_tutorial(self, _):
+    def test_generate_map_stage_0_tutorial(self):
         room = generate_map(0)
         tutorial = {
             (4, 4): "\033[1m\033[33mW  \033[0m",
@@ -97,8 +83,7 @@ class TestGenerateMap(TestCase):
         for (row, col), expected in tutorial.items():
             self.assertEqual(room[row][col], expected)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_1_rewards(self, _):
+    def test_generate_map_stage_1_rewards(self):
         reward_spots = [(1, 1), (1, 15), (8, 1), (8, 15)]
         room = generate_map(1)
         rewards = [(row, col) for row in range(10) for col in range(17) if room[row][col] == "🎁 "]
@@ -107,8 +92,7 @@ class TestGenerateMap(TestCase):
         for reward in rewards:
             self.assertIn(reward, reward_spots)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_2_rewards(self, _):
+    def test_generate_map_stage_2_rewards(self):
         reward_spots = [(1, 1), (1, 15), (8, 1), (8, 15)]
         room = generate_map(2)
         rewards = [(row, col) for row in range(10) for col in range(17) if room[row][col] == "🎁 "]
@@ -117,8 +101,7 @@ class TestGenerateMap(TestCase):
         for reward in rewards:
             self.assertIn(reward, reward_spots)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_3_rewards(self, _):
+    def test_generate_map_stage_3_rewards(self):
         reward_spots = [(1, 1), (1, 15), (8, 1), (8, 15)]
         room = generate_map(3)
         rewards = [(row, col) for row in range(10) for col in range(17) if room[row][col] == "🎁 "]
@@ -127,8 +110,7 @@ class TestGenerateMap(TestCase):
         for reward in rewards:
             self.assertIn(reward, reward_spots)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_1_enemies(self, _):
+    def test_generate_map_stage_1_enemies(self):
         enemy_zone = ([(row, col) for row in range(3, 7) for col in range(3, 6)] +
                       [(row, col) for row in range(3, 7) for col in range(11, 14)])
         room = generate_map(1)
@@ -139,8 +121,7 @@ class TestGenerateMap(TestCase):
         for enemy in enemy_spots:
             self.assertIn(enemy, enemy_zone)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_2_enemies(self, _):
+    def test_generate_map_stage_2_enemies(self):
         enemy_zone = ([(row, col) for row in range(3, 7) for col in range(3, 6)] +
                       [(row, col) for row in range(3, 7) for col in range(11, 14)])
         room = generate_map(2)
@@ -151,8 +132,7 @@ class TestGenerateMap(TestCase):
         for enemy in enemy_spots:
             self.assertIn(enemy, enemy_zone)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_3_enemies(self, _):
+    def test_generate_map_stage_3_enemies(self):
         enemy_zone = ([(row, col) for row in range(3, 7) for col in range(3, 6)] +
                       [(row, col) for row in range(3, 7) for col in range(11, 14)])
         room = generate_map(3)
@@ -163,8 +143,7 @@ class TestGenerateMap(TestCase):
         for enemy in enemy_spots:
             self.assertIn(enemy, enemy_zone)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_1_water_in_zone(self, _):
+    def test_generate_map_stage_1_water_in_zone(self):
         room = generate_map(1)
         water_tile = "🌀 "
         water_zone = ([(row, col) for row in range(2, 8) for col in range(2, 7)] +
@@ -173,8 +152,7 @@ class TestGenerateMap(TestCase):
         for water in water_spots:
             self.assertIn(water, water_zone)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_2_water_in_zone(self, _):
+    def test_generate_map_stage_2_water_in_zone(self):
         room = generate_map(2)
         water_tile = "🌀 "
         water_zone = ([(row, col) for row in range(2, 8) for col in range(2, 7)] +
@@ -183,8 +161,7 @@ class TestGenerateMap(TestCase):
         for water in water_spots:
             self.assertIn(water, water_zone)
 
-    @patch('game.water_generator')
-    def test_generate_map_stage_3_water_in_zone(self, _):
+    def test_generate_map_stage_3_water_in_zone(self):
         room = generate_map(3)
         water_tile = "🌀 "
         water_zone = ([(row, col) for row in range(2, 8) for col in range(2, 7)] +
@@ -193,19 +170,16 @@ class TestGenerateMap(TestCase):
         for water in water_spots:
             self.assertIn(water, water_zone)
 
-    @patch('game.water_generator')
-    def test_generate_map_boss_room_boss_location(self, _):
+    def test_generate_map_boss_room_boss_location(self):
         room = generate_map(4)
         self.assertEqual(room[4][8], "💀 ")
 
-    @patch('game.water_generator')
-    def test_generate_map_boss_room_rewards(self, _):
+    def test_generate_map_boss_room_rewards(self):
         room = generate_map(4)
         self.assertEqual(room[8][6], "🎁 ")
         self.assertEqual(room[8][10], "🎁 ")
 
-    @patch('game.water_generator')
-    def test_generate_map_boss_room_door_location(self, _):
+    def test_generate_map_boss_room_door_location(self):
         room = generate_map(4)
         self.assertEqual(room[0][8], "🚪 ")
         self.assertEqual(room[9][8], "🔒 ")
