@@ -699,8 +699,8 @@ def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
         },
         "💀 ": {
             "name": "Unkillable Demon King",
-            "HP": 50,
-            "atk_mod": 5
+            "HP": 44,
+            "atk_mod": 4
         }
     }
     user_input = input(f"Fight \033[91m\033[1m{enemies[enemy]["name"]}\033[0m?"
@@ -715,10 +715,10 @@ def fight_enemy(enemy: str, character: dict, stage_level: int) -> bool:
             for stat in character["class"]["main_stats"]:
                 character_damage += round(character["stats"][stat.lower()] * random.random() * 0.5)
             if character["stats"]["luc"] * 3 + 25 > random.randint(1, 100):
-                enemies[enemy]["HP"] -= round(character_damage * 1.5)
+                enemies[enemy]["HP"] -= round(character_damage * 1.75)
                 print("\033[94m\033[1mCRITICAL HIT!\033[0m")
                 print(f"You attacked {enemies[enemy]["name"]} dealing "
-                      f"\033[91m\033[1m{round(character_damage * 1.5)}\033[0m damage!\n")
+                      f"\033[91m\033[1m{round(character_damage * 1.75)}\033[0m damage!\n")
                 print(f" {enemy} " + "\033[93m❤︎\033[0m" * enemies[enemy]["HP"] + "\n")
             elif character["stats"]["dex"] * 2 + 60 < random.randint(1, 100):
                 print("\033[94mYou Missed!\033[0m\n")
