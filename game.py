@@ -583,7 +583,7 @@ def open_reward(character: dict) -> bool:
 
     def reward_random_stat() -> tuple:
         stat = random.choice(["str", "dex", "int", "luc"])
-        increase = random.randint(-2, 3)
+        increase = random.choice([-2, -1, 1, 2, 3])
 
         def apply():
             character["stats"][stat] += increase
