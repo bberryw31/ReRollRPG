@@ -191,3 +191,87 @@ class TestOpenReward(TestCase):
         self.assertEqual(character["roll"], 0)
         self.assertIn("You are out of re-rolls!", output)
         self.assertNotEqual(character, character_default)
+
+    @patch("sys.stdout", new_callable=io.StringIO)
+    @patch("builtins.input", side_effect=["y", "3", "1"])
+    @patch("time.sleep")
+    def test_open_reward_open_invalid_integer_input_then_confirm(self, _, __, mock_stdout):
+        character_default = {
+            "HP": 5,
+            "max_HP": 10,
+            "roll": 1,
+            "stats": {"str": 1, "dex": 1, "int": 1, "luc": 1}
+        }
+        character = {
+            "HP": 5,
+            "max_HP": 10,
+            "roll": 1,
+            "stats": {"str": 1, "dex": 1, "int": 1, "luc": 1}
+        }
+        open_reward(character)
+        output = mock_stdout.getvalue()
+        self.assertIn("Invalid input.", output)
+        self.assertNotEqual(character, character_default)
+
+    @patch("sys.stdout", new_callable=io.StringIO)
+    @patch("builtins.input", side_effect=["y", "n", "1"])
+    @patch("time.sleep")
+    def test_open_reward_open_invalid_string_input_then_confirm(self, _, __, mock_stdout):
+        character_default = {
+            "HP": 5,
+            "max_HP": 10,
+            "roll": 1,
+            "stats": {"str": 1, "dex": 1, "int": 1, "luc": 1}
+        }
+        character = {
+            "HP": 5,
+            "max_HP": 10,
+            "roll": 1,
+            "stats": {"str": 1, "dex": 1, "int": 1, "luc": 1}
+        }
+        open_reward(character)
+        output = mock_stdout.getvalue()
+        self.assertIn("Invalid input.", output)
+        self.assertNotEqual(character, character_default)
+
+    @patch("sys.stdout", new_callable=io.StringIO)
+    @patch("builtins.input", side_effect=["y", " ", "1"])
+    @patch("time.sleep")
+    def test_open_reward_open_invalid_space_input_then_confirm(self, _, __, mock_stdout):
+        character_default = {
+            "HP": 5,
+            "max_HP": 10,
+            "roll": 1,
+            "stats": {"str": 1, "dex": 1, "int": 1, "luc": 1}
+        }
+        character = {
+            "HP": 5,
+            "max_HP": 10,
+            "roll": 1,
+            "stats": {"str": 1, "dex": 1, "int": 1, "luc": 1}
+        }
+        open_reward(character)
+        output = mock_stdout.getvalue()
+        self.assertIn("Invalid input.", output)
+        self.assertNotEqual(character, character_default)
+
+    @patch("sys.stdout", new_callable=io.StringIO)
+    @patch("builtins.input", side_effect=["y", "", "1"])
+    @patch("time.sleep")
+    def test_open_reward_open_invalid_empty_input_then_confirm(self, _, __, mock_stdout):
+        character_default = {
+            "HP": 5,
+            "max_HP": 10,
+            "roll": 1,
+            "stats": {"str": 1, "dex": 1, "int": 1, "luc": 1}
+        }
+        character = {
+            "HP": 5,
+            "max_HP": 10,
+            "roll": 1,
+            "stats": {"str": 1, "dex": 1, "int": 1, "luc": 1}
+        }
+        open_reward(character)
+        output = mock_stdout.getvalue()
+        self.assertIn("Invalid input.", output)
+        self.assertNotEqual(character, character_default)
