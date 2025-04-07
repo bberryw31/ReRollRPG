@@ -247,7 +247,7 @@ def select_character(class_pool: list[str], restart_count: int) -> dict:
 
         \033[1m\033[33mSTR\033[0m : {new_character["stats"]["str"]} \t\033[2m Reduce damage taken\033[0m
         \033[1m\033[33mDEX\033[0m : {new_character["stats"]["dex"]} \t\033[2m Attack accuracy & dodge chance\033[0m
-        \033[1m\033[33mINT\033[0m : {new_character["stats"]["int"]} \t\033[2m Get inspired\033[0m
+        \033[1m\033[33mINT\033[0m : {new_character["stats"]["int"]} \t\033[2m Get inspiration & find clean water\033[0m
         \033[1m\033[33mLUC\033[0m : {new_character["stats"]["luc"]} \t\033[2m Critical attack chance\033[0m
     
     HP : \033[1m{new_character["HP"]}\033[0m\t\033[2m Character health points\033[0m
