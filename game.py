@@ -522,13 +522,13 @@ def drink_water(character: dict):
                           "\033[0m > ").strip().lower()
     if user_decision == "y":
         odds = random.randint(1, 100)
-        if odds < 25:
+        if odds < 25 + character["stats"]["int"] * 0.5:
             random_stat = random.choice(["str", "dex", "int", "luc"])
             random_change = random.randint(1, 2)
             character["stats"][random_stat] += random_change
             print(f"\033[94mYou feel stronger. \033[0m\n"
                   f"\t\033[1mGain \033[96m+{random_change}\033[0m \033[1m{random_stat.upper()}\033[0m!")
-        elif odds < 50:
+        elif odds < 50 + character["stats"]["int"]:
             random_increase = random.randint(1, 2)
             character["HP"] += random_increase
             print(f"\033[93mYou feel refreshed. \033[0m\n"
