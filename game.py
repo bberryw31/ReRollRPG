@@ -577,7 +577,10 @@ def open_reward(character: dict) -> bool:
         increase = random.choice([1, 2])
 
         def apply():
-            character["stats"][stat] += increase
+            try:
+                character["stats"][stat] += increase
+            except KeyError:
+                print(f"Error: Unknown stat {stat}.")
 
         return f"\033[1mGain \033[96m{increase} \033[0m\033[1m{stat.upper()}\033[0m", apply
 
@@ -586,8 +589,11 @@ def open_reward(character: dict) -> bool:
         increase = random.choice([-2, -1, 1, 2, 3])
 
         def apply():
-            character["stats"][stat] += increase
-            print(f"\n\t\033[1mGained \033[96m{increase} \033[0m\033[1m{stat.upper()}\033[0m!!")
+            try:
+                character["stats"][stat] += increase
+                print(f"\n\t\033[1mGained \033[96m{increase} \033[0m\033[1m{stat.upper()}\033[0m!!")
+            except KeyError:
+                print(f"Error: Unknown stat {stat}.")
             time.sleep(1.5)
 
         return f"\033[1mGain \033[96m-2 ~ +3\033[0m\033[1m random stat\033[0m", apply
