@@ -539,7 +539,6 @@ def drink_water(character: dict):
         time.sleep(2)
 
 
-
 def open_reward(character: dict) -> bool:
     """
     Prompt the player to open a reward and apply a chosen effect.
