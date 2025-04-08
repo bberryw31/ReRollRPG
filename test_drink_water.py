@@ -42,7 +42,7 @@ class TestDrinkWater(TestCase):
         self.assertEqual(character["stats"]["str"], 1)
 
     @patch("random.choice", return_value="str")
-    @patch("random.randint", side_effect=[24, 1])
+    @patch("random.randint", side_effect=[10, 1])
     @patch("builtins.input", return_value="y")
     @patch("time.sleep")
     def test_drink_water_stat_gain_str_1(self, _, __, ___, ____):
@@ -51,7 +51,7 @@ class TestDrinkWater(TestCase):
         self.assertEqual(character["stats"]["str"], 2)
 
     @patch("random.choice", return_value="str")
-    @patch("random.randint", side_effect=[24, 2])
+    @patch("random.randint", side_effect=[10, 2])
     @patch("builtins.input", return_value="y")
     @patch("time.sleep")
     def test_drink_water_stat_gain_str_2(self, _, __, ___, ____):
@@ -60,7 +60,7 @@ class TestDrinkWater(TestCase):
         self.assertEqual(character["stats"]["str"], 3)
 
     @patch("random.choice", return_value="dex")
-    @patch("random.randint", side_effect=[24, 1])
+    @patch("random.randint", side_effect=[10, 1])
     @patch("builtins.input", return_value="y")
     @patch("time.sleep")
     def test_drink_water_stat_gain_dex(self, _, __, ___, ____):
@@ -69,7 +69,7 @@ class TestDrinkWater(TestCase):
         self.assertEqual(character["stats"]["dex"], 2)
 
     @patch("random.choice", return_value="int")
-    @patch("random.randint", side_effect=[24, 1])
+    @patch("random.randint", side_effect=[10, 1])
     @patch("builtins.input", return_value="y")
     @patch("time.sleep")
     def test_drink_water_stat_gain_int(self, _, __, ___, ____):
@@ -78,7 +78,7 @@ class TestDrinkWater(TestCase):
         self.assertEqual(character["stats"]["int"], 2)
 
     @patch("random.choice", return_value="luc")
-    @patch("random.randint", side_effect=[24, 1])
+    @patch("random.randint", side_effect=[10, 1])
     @patch("builtins.input", return_value="y")
     @patch("time.sleep")
     def test_drink_water_stat_gain_luc(self, _, __, ___, ____):
