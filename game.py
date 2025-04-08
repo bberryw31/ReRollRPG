@@ -411,7 +411,6 @@ def display_map(room: list[list[str]], character: dict, stage: int):
     print(map_print)
 
 
-
 def get_user_action() -> str | tuple[int, int]:
     """
     Prompt the player for an action and return the movement direction or other decisions.
