@@ -74,9 +74,9 @@
 ---
 
 ## Example Screenshot
-```
 ![Game Example Screenshot](game_example.png)
 
+```
 You find yourself at the dungeon's entrance.
 What could possibly go wrong?
 ```
