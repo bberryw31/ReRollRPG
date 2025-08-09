@@ -75,22 +75,7 @@
 
 ## Example Screenshot
 ```
- 🌑 Starting Room
-🟨 🟨 🟨 🟨 🟨 🟨 🟨 🟨 🚪 🟨 🟨 🟨 🟨 🟨 🟨 🟨 🟨 
-🟨 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  🟨 
-🟨 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  🟨 
-🟨 .  .  .  ⬆️ .  .  .  🎁 .  .  .  .  .  .  .  🟨 
-🟨 .  .  .  W  .  .  .  .  .  .  Q    QUIT   .  🟨 
-🟨 .  ⬅️ A  S  D  ➡️ .  .  .  .  .  .  .  .  .  🟨 
-🟨 .  .  .  ⬇️ .  .  .  .  .  .  .  .  .  .  .  🟨 
-🟨 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  🟨 
-🟨 .  .  .  .  .  .  .  🎰 .  .  .  .  .  .  .  🟨 
-🟨 🟨 🟨 🟨 🟨 🟨 🟨 🟨 🔒 🟨 🟨 🟨 🟨 🟨 🟨 🟨 🟨 
-               ℹ️ CHARACTER INFO ℹ️
-               HP ❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎
-                     🎲 13
-                  STR 7 DEX 3
-                  INT 7 LUC 7
+![Game Example Screenshot](game_example.png)
 
 You find yourself at the dungeon's entrance.
 What could possibly go wrong?
