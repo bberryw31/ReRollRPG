@@ -1,55 +1,97 @@
-# comp-1510-term-project
+# ReRollRPG
 
-Every program needs a README.md
+         ___           ___           ___           ___           ___       ___ 
+        /\  \         /\  \         /\  \         /\  \         /\__\     /\__\
+       /::\  \       /::\  \       /::\  \       /::\  \       /:/  /    /:/  /
+      /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/\:\  \     /:/  /    /:/  / 
+     /::\~\:\  \   /::\~\:\  \   /::\~\:\  \   /:/  \:\  \   /:/  /    /:/  /  
+    /:/\:\ \:\__\ /:/\:\ \:\__\ /:/\:\ \:\__\ /:/__/ \:\__\ /:/__/    /:/__/   
+    \/_|::\/:/  / \:\~\:\ \/__/ \/_|::\/:/  / \:\  \ /:/  / \:\  \    \:\  \   
+       |:|::/  /   \:\ \:\__\      |:|::/  /   \:\  /:/  /   \:\  \    \:\  \  
+       |:|\/__/     \:\ \/__/      |:|\/__/     \:\/:/  /     \:\  \    \:\  \ 
+       |:|  |        \:\__\        |:|  |        \::/  /       \:\__\    \:\__\
+        \|__|         \/__/         \|__|         \/__/         \/__/     \/__/  
+                            ________ ________ _________
+                            ___  __ \___  __ \__  ____/
+                            __  /_/ /__  /_/ /_  / __
+                            _  _, _/ _  ____/ / /_/ /
+                            /_/ |_|  /_/      \____/
 
-This is written in markdown. Read about markdown here: [markdowncheatsheet](https://www.markdownguide.org/cheat-sheet/)
+**ReRollRPG** is a turn-based, text-based dungeon crawler with a twist — fate isn’t set in stone. Your stats, class, and even your dungeon runs can shift with a lucky (or unlucky) roll of the dice. Fight enemies, find rewards, drink mysterious water, and survive until you face the final boss… or die trying.
 
-## Your name:
-Jimmy Cho
+---
 
-## Your student number:
-A01450217
+## Features
+- **Randomized Character Creation** – Roll your stats and get two random classes to choose from. Higher-tier classes are harder to get.
+- **Procedurally Generated Maps** – Each level generates walls, rooms, enemies, rewards, and special tiles.
+- **Turn-Based Combat** – Your attacks scale based on your class’s main stat. Strategy matters.
+- **Mysterious Rewards & Water Tiles** – Boost stats, heal up, or get unexpected effects.
+- **Boss Fight Finale** – Level 4 is a one-room showdown with the big bad.
+- **Humorous & Slightly Sinister Writing** – The dungeon has jokes… and teeth.
 
-## Your GitHub name:
-bberryw31
+---
 
-## Any important comments you'd like to make about your work:
-# 🎲 ReRollRPG
+## How to Play
+1. **Run the game in a proper terminal**  
+   It’s recommended to play in a system terminal (Command Prompt, macOS Terminal, or Linux shell). IDE command lines (like PyCharm’s or VSCode’s) may break formatting and colors.
+   
+2. **Launch the game**
+   ```bash
+   python3 game.py
+   ```
+   
+3. **Create your character**
+   - Roll your stats.
+   - Pick one of the two classes offered.
+   - If you don’t like your options, re-roll… at your own risk.
 
-**ReRollRPG** is a text-based terminal adventure where luck shapes your journey through a mysterious dungeon.
+4. **Explore the dungeon**
+   - Navigate with movement commands (`WASD` or arrow keys if supported).
+   - Enter rooms, fight enemies, and collect loot.
+   - Watch out for water tiles — not all hydration is safe.
 
-## 🕹 How to Play
+5. **Clear levels**
+   - Defeat enemies to unlock doors.
+   - Progress deeper until you reach the boss.
 
-- **Recommended Environment**:  
-  Run the game in a fullscreen **Unix-based terminal** for proper display of emojis, colors, and animation.  
-  ❗ Avoid IDE consoles and Windows CMD — they may not render the game properly.
+6. **Try again**
+   - Each run is unique thanks to randomized maps, enemies, and events.
 
-- **Launch the Game**:
-  ```bash
-  python3 game.py
+---
 
-## Required elements
-<div style="display: flex; justify-content: space-between;">
-  <div style="width: 48%;">
-    <h3>Required element</h3>
-    <p>list/dictionary comprehension</p>
-    <p>selection using if-statement</p>
-    <p>repetition using for/while loop</p>
-    <p>membership operator</p>
-    <p>range function</p>
-    <p>itertools function</p>
-    <p>random module</p>
-    <p>f-strings</p>
-  </div>
-  <div style="width: 48%;">
-    <h3>Where to find it</h3>
-    <p>Line 299, 300, 304, 366</p>
-    <p>Line 401, 429, 470</p>
-    <p>Line 610, 764, 780</p>
-    <p>Line 472</p>
-    <p>Line 24, 299, 300, 325</p>
-    <p>Line 785</p>
-    <p>Line 198, 199, 338</p>
-    <p>Line 24, 395, 396</p>
-  </div>
-</div>
+## Tips
+- Your main stat matters more than you think.
+- Don’t ignore the water tiles — sometimes they’re the best way to survive.
+- Remember: even when you win, the dungeon has a way of… making you start over.
+
+---
+
+## Requirements
+- Python 3.8+
+- Runs best in a standard terminal (supports ANSI escape colors).
+- No external dependencies — just run and play.
+
+---
+
+## Example Screenshot
+```
+ 🌑 Starting Room
+🟨 🟨 🟨 🟨 🟨 🟨 🟨 🟨 🚪 🟨 🟨 🟨 🟨 🟨 🟨 🟨 🟨 
+🟨 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  🟨 
+🟨 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  🟨 
+🟨 .  .  .  ⬆️ .  .  .  🎁 .  .  .  .  .  .  .  🟨 
+🟨 .  .  .  W  .  .  .  .  .  .  Q    QUIT   .  🟨 
+🟨 .  ⬅️ A  S  D  ➡️ .  .  .  .  .  .  .  .  .  🟨 
+🟨 .  .  .  ⬇️ .  .  .  .  .  .  .  .  .  .  .  🟨 
+🟨 .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  🟨 
+🟨 .  .  .  .  .  .  .  🎰 .  .  .  .  .  .  .  🟨 
+🟨 🟨 🟨 🟨 🟨 🟨 🟨 🟨 🔒 🟨 🟨 🟨 🟨 🟨 🟨 🟨 🟨 
+               ℹ️ CHARACTER INFO ℹ️
+               HP ❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎❤︎
+                     🎲 13
+                  STR 7 DEX 3
+                  INT 7 LUC 7
+
+You find yourself at the dungeon's entrance.
+What could possibly go wrong?
+```
